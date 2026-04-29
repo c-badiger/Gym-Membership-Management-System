@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members - GymAdmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-dumbbell"></i> GymAdmin
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="members.html" class="nav-link active"><i class="fas fa-users"></i> Members</a></li>
+                <li class="nav-item"><a href="plans.html" class="nav-link"><i class="fas fa-tags"></i> Plans</a></li>
+                <li class="nav-item"><a href="payments.html" class="nav-link"><i class="fas fa-credit-card"></i> Payments</a></li>
+                <li class="nav-item" style="margin-top: 2rem;">
+                    <a href="#" class="nav-link" onclick="logout()" style="color: var(--danger);">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <nav class="top-navbar">
+                <div class="nav-title">Member Management</div>
+                <div class="user-profile">
+                    <span id="user-name" style="font-weight: 600;">Admin</span>
+                    <i class="fas fa-user-circle" style="font-size: 1.5rem; margin-left: 0.5rem; color: var(--primary);"></i>
+                </div>
+            </nav>
+
+            <div class="page-content">
+                <div class="page-header">
+                    <h2>Members List</h2>
+                    <div class="action-btns">
+                        <button class="btn" onclick="openModal()"><i class="fas fa-plus"></i> Add Member</button>
+                    </div>
+                </div>
+
+                <div class="glass table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Join Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="members-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal" id="memberModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add Member</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="member-form">
+                <input type="hidden" id="member-id">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" id="phone" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Join Date</label>
+                    <input type="date" id="join_date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="status" class="form-control">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" id="save-btn">Save Member</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        checkAuth();
+        let isEdit = false;
+
+        const loadMembers = async () => {
+            try {
+                const members = await fetchAPI('/members');
+                const tbody = document.getElementById('members-body');
+                tbody.innerHTML = members.map(m => `
+                    <tr>
+                        <td>${m.name}</td>
+                        <td>${m.email}</td>
+                        <td>${m.phone || 'N/A'}</td>
+                        <td>${new Date(m.join_date).toLocaleDateString()}</td>
+                        <td><span class="badge badge-${m.status}">${m.status}</span></td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick='editMember(${JSON.stringify(m).replace(/'/g, "\\'")})'><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="deleteMember(${m.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        const openModal = () => {
+            isEdit = false;
+            document.getElementById('member-form').reset();
+            document.getElementById('member-id').value = '';
+            document.getElementById('modal-title').textContent = 'Add Member';
+            document.getElementById('join_date').valueAsDate = new Date();
+            document.getElementById('memberModal').classList.add('show');
+        };
+
+        const closeModal = () => {
+            document.getElementById('memberModal').classList.remove('show');
+        };
+
+        const editMember = (member) => {
+            isEdit = true;
+            document.getElementById('modal-title').textContent = 'Edit Member';
+            document.getElementById('member-id').value = member.id;
+            document.getElementById('name').value = member.name;
+            document.getElementById('email').value = member.email;
+            document.getElementById('phone').value = member.phone;
+            document.getElementById('join_date').value = member.join_date.split('T')[0];
+            document.getElementById('status').value = member.status;
+            document.getElementById('memberModal').classList.add('show');
+        };
+
+        document.getElementById('member-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('save-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            
+            const payload = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                join_date: document.getElementById('join_date').value,
+                status: document.getElementById('status').value
+            };
+            const id = document.getElementById('member-id').value;
+
+            try {
+                if (isEdit) {
+                    await fetchAPI(`/members/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+                    showNotification('Member updated');
+                } else {
+                    await fetchAPI('/members', { method: 'POST', body: JSON.stringify(payload) });
+                    showNotification('Member added');
+                }
+                closeModal();
+                loadMembers();
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                btn.innerHTML = 'Save Member';
+            }
+        });
+
+        const deleteMember = async (id) => {
+            if (confirm('Are you sure you want to delete this member?')) {
+                try {
+                    await fetchAPI(`/members/${id}`, { method: 'DELETE' });
+                    showNotification('Member deleted');
+                    loadMembers();
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+        };
+
+        loadMembers();
+    </script>
+</body>
+</html>

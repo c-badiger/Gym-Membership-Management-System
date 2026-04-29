@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GymAdmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-dumbbell"></i> GymAdmin
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item"><a href="dashboard.html" class="nav-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="members.html" class="nav-link"><i class="fas fa-users"></i> Members</a></li>
+                <li class="nav-item"><a href="plans.html" class="nav-link"><i class="fas fa-tags"></i> Plans</a></li>
+                <li class="nav-item"><a href="payments.html" class="nav-link"><i class="fas fa-credit-card"></i> Payments</a></li>
+                <li class="nav-item" style="margin-top: 2rem;">
+                    <a href="#" class="nav-link" onclick="logout()" style="color: var(--danger);">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <nav class="top-navbar">
+                <div class="nav-title">Overview</div>
+                <div class="user-profile">
+                    <span id="user-name" style="font-weight: 600;">Admin</span>
+                    <i class="fas fa-user-circle" style="font-size: 1.5rem; margin-left: 0.5rem; color: var(--primary);"></i>
+                </div>
+            </nav>
+
+            <div class="page-content">
+                <!-- Stats Cards -->
+                <div class="stats-grid" id="stats-container">
+                    <div class="stat-card glass">
+                        <div class="stat-info">
+                            <h3>Total Members</h3>
+                            <p id="total-members">...</p>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(99, 102, 241, 0.2); color: var(--primary);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-info">
+                            <h3>Active Subs</h3>
+                            <p id="active-subs">...</p>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.2); color: var(--secondary);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-info">
+                            <h3>Total Revenue</h3>
+                            <p id="total-revenue">...</p>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-info">
+                            <h3>Pending Payments</h3>
+                            <p id="pending-payments">...</p>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(239, 68, 68, 0.2); color: var(--danger);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-container glass">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="chart-container glass">
+                        <canvas id="membersChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="glass table-container">
+                    <h3 style="margin-bottom: 1rem; color: var(--text-secondary);">Recent Members</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Join Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-members-body">
+                            <!-- Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        checkAuth();
+
+        // Load Dashboard Data
+        const loadDashboard = async () => {
+            try {
+                const data = await fetchAPI('/dashboard/stats');
+                
+                // Update Cards
+                document.getElementById('total-members').textContent = data.cards.totalMembers;
+                document.getElementById('active-subs').textContent = data.cards.activeSubscriptions;
+                document.getElementById('total-revenue').textContent = '$' + data.cards.totalRevenue;
+                document.getElementById('pending-payments').textContent = data.cards.pendingPayments;
+
+                // Render Revenue Chart
+                const ctxRev = document.getElementById('revenueChart').getContext('2d');
+                new Chart(ctxRev, {
+                    type: 'line',
+                    data: {
+                        labels: data.charts.monthlyRevenue.map(d => d.month),
+                        datasets: [{
+                            label: 'Monthly Revenue ($)',
+                            data: data.charts.monthlyRevenue.map(d => d.revenue),
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: { maintainAspectRatio: false, plugins: { title: { display: true, text: 'Revenue Trend', color: '#fff' } }, scales: { y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8'} }, x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8'} } } }
+                });
+
+                // Render Members Chart
+                const ctxMem = document.getElementById('membersChart').getContext('2d');
+                new Chart(ctxMem, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Active', 'Inactive'],
+                        datasets: [{
+                            data: [data.charts.memberStatus.active, data.charts.memberStatus.inactive],
+                            backgroundColor: ['#6366f1', '#ef4444'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { maintainAspectRatio: false, plugins: { title: { display: true, text: 'Member Status', color: '#fff' } } }
+                });
+
+                // Recent Members Table
+                const tbody = document.getElementById('recent-members-body');
+                tbody.innerHTML = data.recentMembers.map(m => `
+                    <tr>
+                        <td>${m.name}</td>
+                        <td>${new Date(m.join_date).toLocaleDateString()}</td>
+                    </tr>
+                `).join('');
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        loadDashboard();
+    </script>
+</body>
+</html>

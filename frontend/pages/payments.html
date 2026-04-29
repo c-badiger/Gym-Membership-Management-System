@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments - GymAdmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-dumbbell"></i> GymAdmin
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="members.html" class="nav-link"><i class="fas fa-users"></i> Members</a></li>
+                <li class="nav-item"><a href="plans.html" class="nav-link"><i class="fas fa-tags"></i> Plans</a></li>
+                <li class="nav-item"><a href="payments.html" class="nav-link active"><i class="fas fa-credit-card"></i> Payments</a></li>
+                <li class="nav-item" style="margin-top: 2rem;">
+                    <a href="#" class="nav-link" onclick="logout()" style="color: var(--danger);">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <nav class="top-navbar">
+                <div class="nav-title">Payments & Subscriptions</div>
+                <div class="user-profile">
+                    <span id="user-name" style="font-weight: 600;">Admin</span>
+                    <i class="fas fa-user-circle" style="font-size: 1.5rem; margin-left: 0.5rem; color: var(--primary);"></i>
+                </div>
+            </nav>
+
+            <div class="page-content">
+                <div class="page-header">
+                    <h2>Payment History</h2>
+                    <div class="action-btns">
+                        <button class="btn" onclick="openModal()"><i class="fas fa-plus"></i> Record Payment</button>
+                    </div>
+                </div>
+
+                <div class="glass table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Txn ID</th>
+                                <th>Member</th>
+                                <th>Plan</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Sub Start</th>
+                                <th>Sub End</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Record Payment & Subscription</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="payment-form">
+                <div class="form-group">
+                    <label>Member</label>
+                    <select id="member_id" class="form-control" required>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Plan</label>
+                    <select id="plan_id" class="form-control" required onchange="updateAmount()">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount ($)</label>
+                    <input type="number" step="0.01" id="amount" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="status" class="form-control">
+                        <option value="paid">Paid</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" id="save-btn">Submit Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        checkAuth();
+        let plansData = [];
+
+        const loadPayments = async () => {
+            try {
+                const payments = await fetchAPI('/payments');
+                const tbody = document.getElementById('payments-body');
+                tbody.innerHTML = payments.map(p => `
+                    <tr>
+                        <td>#${p.id}</td>
+                        <td style="font-weight: 600;">${p.member_name}</td>
+                        <td>${p.plan_name || 'N/A'}</td>
+                        <td>$${p.amount}</td>
+                        <td>${new Date(p.payment_date).toLocaleString()}</td>
+                        <td>${p.start_date ? new Date(p.start_date).toLocaleDateString() : '-'}</td>
+                        <td>${p.end_date ? new Date(p.end_date).toLocaleDateString() : '-'}</td>
+                        <td><span class="badge badge-${p.status}">${p.status}</span></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        const loadDropdowns = async () => {
+            try {
+                const [members, plans] = await Promise.all([
+                    fetchAPI('/members'),
+                    fetchAPI('/plans')
+                ]);
+
+                plansData = plans;
+
+                const memberSelect = document.getElementById('member_id');
+                memberSelect.innerHTML = '<option value="">Select Member</option>' + members.map(m => `
+                    <option value="${m.id}">${m.name} (${m.email})</option>
+                `).join('');
+
+                const planSelect = document.getElementById('plan_id');
+                planSelect.innerHTML = '<option value="">Select Plan</option>' + plans.map(p => `
+                    <option value="${p.id}">${p.name} - $${p.price}</option>
+                `).join('');
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        const updateAmount = () => {
+            const planId = document.getElementById('plan_id').value;
+            if(planId) {
+                const plan = plansData.find(p => p.id == planId);
+                if(plan) {
+                    document.getElementById('amount').value = plan.price;
+                }
+            } else {
+                document.getElementById('amount').value = '';
+            }
+        };
+
+        const openModal = () => {
+            document.getElementById('payment-form').reset();
+            document.getElementById('paymentModal').classList.add('show');
+            loadDropdowns();
+        };
+
+        const closeModal = () => {
+            document.getElementById('paymentModal').classList.remove('show');
+        };
+
+        document.getElementById('payment-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('save-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
+            const payload = {
+                member_id: document.getElementById('member_id').value,
+                plan_id: document.getElementById('plan_id').value,
+                amount: document.getElementById('amount').value,
+                status: document.getElementById('status').value
+            };
+
+            try {
+                await fetchAPI('/payments', { method: 'POST', body: JSON.stringify(payload) });
+                showNotification('Payment recorded successfully');
+                closeModal();
+                loadPayments();
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                btn.innerHTML = 'Submit Payment';
+            }
+        });
+
+        loadPayments();
+    </script>
+</body>
+</html>
