@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymPro | Members</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+  <div class="app-layout">
+    
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-icon">G</div>
+        <div class="logo-text">GymPro</div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <i class="ph ph-squares-four"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="members.html" class="nav-item active">
+          <i class="ph ph-users"></i>
+          <span>Members</span>
+        </a>
+        <a href="plans.html" class="nav-item">
+          <i class="ph ph-tag"></i>
+          <span>Plans</span>
+        </a>
+        <a href="payments.html" class="nav-item">
+          <i class="ph ph-credit-card"></i>
+          <span>Payments</span>
+        </a>
+        <a href="diet.html" class="nav-item">
+          <i class="ph ph-apple-logo"></i>
+          <span>Diet & Workout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-toggle" id="mobile-toggle">
+          <i class="ph ph-list"></i>
+        </button>
+
+        <div class="search-bar d-none d-md-block">
+          <i class="ph ph-magnifying-glass"></i>
+          <input type="text" placeholder="Search members, plans, etc...">
+        </div>
+
+        <div class="topbar-actions">
+          <button class="btn-icon">
+            <i class="ph ph-bell"></i>
+            <span class="badge"></span>
+          </button>
+          
+          <div class="user-profile">
+            <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Admin" class="avatar">
+            <div class="user-info">
+              <div class="user-name">Alex Johnson</div>
+              <div class="user-role">Administrator</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div class="page-header">
+          <h1 class="page-title">Members Directory</h1>
+          <div style="display: flex; gap: 12px;">
+            <button class="btn btn-outline">
+              <i class="ph ph-export"></i> Export
+            </button>
+            <button class="btn btn-primary">
+              <i class="ph ph-plus"></i> Add Member
+            </button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="search-bar" style="width: 300px;">
+              <i class="ph ph-magnifying-glass"></i>
+              <input type="text" placeholder="Search by name or email...">
+            </div>
+            <select class="form-control" style="width: auto; padding: 8px 16px;">
+              <option>All Status</option>
+              <option>Active</option>
+              <option>Expired</option>
+            </select>
+          </div>
+          
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 40px;">
+                    <label class="custom-checkbox"><input type="checkbox"></label>
+                  </th>
+                  <th>Member Info</th>
+                  <th>Contact</th>
+                  <th>Plan Type</th>
+                  <th>Join Date</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><label class="custom-checkbox"><input type="checkbox"></label></td>
+                  <td>
+                    <div class="member-cell">
+                      <img src="https://i.pravatar.cc/150?u=11" class="member-avatar" alt="Avatar">
+                      <div>
+                        <div class="member-name">Emma Watson</div>
+                        <div class="member-email">ID: #M-1024</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div style="font-size: 14px;">+1 (555) 123-4567</div>
+                    <div class="member-email">emma@example.com</div>
+                  </td>
+                  <td>Pro Annual</td>
+                  <td>Oct 24, 2023</td>
+                  <td><span class="status-badge status-active">Paid</span></td>
+                  <td style="text-align: right;">
+                    <button class="btn-icon" title="Edit"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-icon" style="color: var(--danger);" title="Delete"><i class="ph ph-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><label class="custom-checkbox"><input type="checkbox"></label></td>
+                  <td>
+                    <div class="member-cell">
+                      <img src="https://i.pravatar.cc/150?u=12" class="member-avatar" alt="Avatar">
+                      <div>
+                        <div class="member-name">Liam Neeson</div>
+                        <div class="member-email">ID: #M-1025</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div style="font-size: 14px;">+1 (555) 987-6543</div>
+                    <div class="member-email">liam@example.com</div>
+                  </td>
+                  <td>Basic Monthly</td>
+                  <td>Nov 01, 2023</td>
+                  <td><span class="status-badge status-inactive">Unpaid</span></td>
+                  <td style="text-align: right;">
+                    <button class="btn-icon" title="Edit"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-icon" style="color: var(--danger);" title="Delete"><i class="ph ph-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><label class="custom-checkbox"><input type="checkbox"></label></td>
+                  <td>
+                    <div class="member-cell">
+                      <img src="https://i.pravatar.cc/150?u=13" class="member-avatar" alt="Avatar">
+                      <div>
+                        <div class="member-name">Sophia Turner</div>
+                        <div class="member-email">ID: #M-1026</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div style="font-size: 14px;">+1 (555) 456-7890</div>
+                    <div class="member-email">sophia@example.com</div>
+                  </td>
+                  <td>Premium</td>
+                  <td>Sep 15, 2023</td>
+                  <td><span class="status-badge status-active">Paid</span></td>
+                  <td style="text-align: right;">
+                    <button class="btn-icon" title="Edit"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-icon" style="color: var(--danger);" title="Delete"><i class="ph ph-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="panel-header" style="border-top: 1px solid var(--border); border-bottom: none;">
+            <div style="font-size: 14px; color: var(--text-muted);">Showing 1 to 3 of 1,248 entries</div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-outline btn-sm" disabled>Previous</button>
+              <button class="btn btn-primary btn-sm">1</button>
+              <button class="btn btn-outline btn-sm">2</button>
+              <button class="btn btn-outline btn-sm">3</button>
+              <button class="btn btn-outline btn-sm">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -10,13 +10,13 @@ const getPlans = async (req, res) => {
 };
 
 const addPlan = async (req, res) => {
-    const { name, description, duration_months, price } = req.body;
+    const { name, description, duration_months, price, discount_price } = req.body;
     try {
         const [result] = await db.execute(
-            'INSERT INTO Membership_Plans (name, description, duration_months, price) VALUES (?, ?, ?, ?)',
-            [name, description, duration_months, price]
+            'INSERT INTO Membership_Plans (name, description, duration_months, price, discount_price) VALUES (?, ?, ?, ?, ?)',
+            [name, description, duration_months, price, discount_price || price]
         );
-        res.status(201).json({ id: result.insertId, name, description, duration_months, price });
+        res.status(201).json({ id: result.insertId, name, description, duration_months, price, discount_price });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

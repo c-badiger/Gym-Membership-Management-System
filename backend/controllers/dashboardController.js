@@ -31,6 +31,19 @@ const getDashboardStats = async (req, res) => {
         const [[{ activeMembers }]] = await db.query("SELECT COUNT(*) as activeMembers FROM Members WHERE status = 'active'");
         const [[{ inactiveMembers }]] = await db.query("SELECT COUNT(*) as inactiveMembers FROM Members WHERE status = 'inactive'");
 
+        // Attendance Stats
+        const today = new Date().toISOString().split('T')[0];
+        const [[{ presentToday }]] = await db.query('SELECT COUNT(*) as presentToday FROM Attendance WHERE date = ? AND status = "present"', [today]);
+        
+        const [monthlyAttendance] = await db.query(`
+            SELECT DATE_FORMAT(date, '%Y-%m') as month, COUNT(*) as count 
+            FROM Attendance 
+            WHERE status = 'present'
+            GROUP BY month 
+            ORDER BY month ASC
+            LIMIT 6
+        `);
+
         // Recent Activity
         const [recentMembers] = await db.query('SELECT name, join_date FROM Members ORDER BY join_date DESC LIMIT 5');
         
@@ -39,11 +52,13 @@ const getDashboardStats = async (req, res) => {
                 totalMembers,
                 activeSubscriptions,
                 totalRevenue: totalRevenue || 0,
-                pendingPayments
+                pendingPayments,
+                presentToday: presentToday || 0
             },
             charts: {
                 monthlyRevenue,
                 monthlyMembers,
+                monthlyAttendance,
                 memberStatus: { active: activeMembers, inactive: inactiveMembers }
             },
             recentMembers

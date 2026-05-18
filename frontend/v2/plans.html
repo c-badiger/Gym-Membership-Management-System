@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymPro | Membership Plans</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-icon">G</div>
+        <div class="logo-text">GymPro</div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <i class="ph ph-squares-four"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="members.html" class="nav-item">
+          <i class="ph ph-users"></i>
+          <span>Members</span>
+        </a>
+        <a href="plans.html" class="nav-item active">
+          <i class="ph ph-tag"></i>
+          <span>Plans</span>
+        </a>
+        <a href="payments.html" class="nav-item">
+          <i class="ph ph-credit-card"></i>
+          <span>Payments</span>
+        </a>
+        <a href="diet.html" class="nav-item">
+          <i class="ph ph-apple-logo"></i>
+          <span>Diet & Workout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-toggle" id="mobile-toggle">
+          <i class="ph ph-list"></i>
+        </button>
+
+        <div class="search-bar d-none d-md-block">
+          <i class="ph ph-magnifying-glass"></i>
+          <input type="text" placeholder="Search members, plans, etc...">
+        </div>
+
+        <div class="topbar-actions">
+          <div class="user-profile">
+            <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Admin" class="avatar">
+          </div>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div class="page-header" style="justify-content: center; text-align: center; margin-bottom: 48px;">
+          <div>
+            <h1 class="page-title" style="font-size: 32px; margin-bottom: 8px;">Membership Plans</h1>
+            <p style="color: var(--text-muted);">Choose the perfect plan tailored for your fitness goals.</p>
+          </div>
+        </div>
+
+        <div class="plans-grid">
+          <!-- Basic Plan -->
+          <div class="plan-card">
+            <div class="plan-header">
+              <h3 class="plan-name">Basic</h3>
+              <div class="plan-price">$29<span>/mo</span></div>
+            </div>
+            <div class="plan-features">
+              <div class="plan-feature">
+                <i class="ph ph-check-circle"></i>
+                <span>Access to gym equipment</span>
+              </div>
+              <div class="plan-feature">
+                <i class="ph ph-check-circle"></i>
+                <span>Locker room access</span>
+              </div>
+              <div class="plan-feature">
+                <i class="ph ph-check-circle"></i>
+                <span>1 free personal training session</span>
+              </div>
+            </div>
+            <button class="btn btn-outline">Choose Plan</button>
+          </div>
+
+          <!-- Pro Plan (Most Popular) -->
+          <div class="plan-card popular">
+            <div class="popular-badge">MOST POPULAR</div>
+            <div class="plan-header">
+              <h3 class="plan-name">Pro</h3>
+              <div class="plan-price">$59<span>/mo</span></div>
+            </div>
+            <div class="plan-features">
+              <div class="plan-feature">
+                <i class="ph ph-check-circle"></i>
+                <span>All Basic features</span>
+              </div>
+              <div class="plan-feature">
+                <i class="ph ph-check-circle"></i>
+                <span>Unlimited group classes</span>
+              </div>
+              <div class="plan-feature">
+                <i class="ph ph-check-circle"></i>
+                <span>Diet & workout tracking</span>
+              </div>
+              <div class="plan-feature">
+                <i class="ph ph-check-circle"></i>
+                <span>Guest pass (2x/month)</span>
+              </div>
+            </div>
+            <button class="btn btn-primary">Choose Plan</button>
+          </div>
+
+          <!-- Elite Plan -->
+          <div class="plan-card">
+            <div class="plan-header">
+              <h3 class="plan-name">Elite</h3>
+              <div class="plan-price">$99<span>/mo</span></div>
+            </div>
+            <div class="plan-features">
+              <div class="plan-feature">
+                <i class="ph ph-check-circle"></i>
+                <span>All Pro features</span>
+              </div>
+              <div class="plan-feature">
+                <i class="ph ph-check-circle"></i>
+                <span>Unlimited personal training</span>
+              </div>
+              <div class="plan-feature">
+                <i class="ph ph-check-circle"></i>
+                <span>Spa & massage access</span>
+              </div>
+              <div class="plan-feature">
+                <i class="ph ph-check-circle"></i>
+                <span>Nutritionist consultation</span>
+              </div>
+            </div>
+            <button class="btn btn-outline">Choose Plan</button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>

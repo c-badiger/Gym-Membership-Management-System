@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - GymPro</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0b0f1a; color: #f1f5f9; padding: 2rem; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
+        .invoice-container { background: #161b22; width: 100%; max-width: 850px; padding: 4rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .invoice-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2.5rem; margin-bottom: 3rem; }
+        .brand-section h1 { font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+        .brand-section p { color: #94a3b8; font-size: 0.9rem; line-height: 1.6; }
+        .meta-section { text-align: right; }
+        .meta-section h2 { color: #94a3b8; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem; }
+        .meta-section .inv-no { font-size: 1.5rem; font-weight: 700; color: #f1f5f9; margin-bottom: 0.5rem; }
+        .meta-section .inv-date { color: #64748b; font-size: 0.9rem; }
+        
+        .invoice-info { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .info-block h3 { color: #64748b; font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1rem; }
+        .info-block p { font-weight: 600; font-size: 1.1rem; color: #f1f5f9; margin-bottom: 0.3rem; }
+        .info-block span { color: #94a3b8; font-size: 0.9rem; }
+        
+        .status-badge { display: inline-block; padding: 0.5rem 1.2rem; border-radius: 8px; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .status-paid { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-pending { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 3rem; }
+        th { text-align: left; padding: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 1.5rem 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        
+        .total-section { display: flex; flex-direction: column; align-items: flex-end; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        .total-row { display: flex; justify-content: space-between; width: 250px; margin-bottom: 1rem; }
+        .total-row.grand { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 1.5rem; font-weight: 800; color: #6366f1; }
+        
+        .actions { margin-top: 4rem; display: flex; justify-content: center; gap: 1rem; }
+        .btn-action { padding: 1rem 2rem; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; font-size: 0.9rem; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-outline { background: transparent; color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-outline:hover { background: rgba(255,255,255,0.05); color: #f1f5f9; }
+
+        @media print {
+            body { background: white; padding: 0; color: black; }
+            .invoice-container { border: none; box-shadow: none; width: 100%; max-width: 100%; padding: 0; }
+            .actions, .btn-action { display: none; }
+            .brand-section h1 { -webkit-text-fill-color: black; }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container glass">
+        <div class="invoice-header">
+            <div class="brand-section">
+                <h1>GymPro</h1>
+                <p>Premium Fitness Solutions<br>123 High-Performance Way<br>Silicon Valley, CA 94025</p>
+            </div>
+            <div class="meta-section">
+                <h2>Tax Invoice</h2>
+                <div class="inv-no">#TXN-<span id="inv-id">---</span></div>
+                <div class="inv-date">Issued: <span id="inv-date">---</span></div>
+            </div>
+        </div>
+
+        <div class="invoice-info">
+            <div class="info-block">
+                <h3>Customer Details</h3>
+                <p id="member-name">---</p>
+                <span id="member-phone">---</span><br>
+                <span id="member-email">---</span>
+            </div>
+            <div class="info-block" style="text-align: right;">
+                <h3>Payment Status</h3>
+                <div id="inv-status-badge" class="status-badge status-pending">---</div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Service Description</th>
+                    <th style="text-align: right;">Quantity</th>
+                    <th style="text-align: right;">Unit Price</th>
+                    <th style="text-align: right;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div style="font-weight: 600; color: #f1f5f9; margin-bottom: 0.4rem;" id="plan-name">---</div>
+                        <div style="font-size: 0.85rem; color: #64748b;" id="plan-desc">---</div>
+                    </td>
+                    <td style="text-align: right;">1</td>
+                    <td style="text-align: right;">$<span id="unit-price">0.00</span></td>
+                    <td style="text-align: right; font-weight: 700; color: #f1f5f9;">$<span id="inv-amount">0.00</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <div class="total-row">
+                <span style="color: #64748b;">Subtotal</span>
+                <span style="color: #f1f5f9;">$<span id="subtotal">0.00</span></span>
+            </div>
+            <div class="total-row">
+                <span style="color: #64748b;">Tax (0%)</span>
+                <span style="color: #f1f5f9;">$0.00</span>
+            </div>
+            <div class="total-row grand">
+                <span>Total Paid</span>
+                <span>$<span id="inv-total">0.00</span></span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn-action btn-primary" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Invoice
+            </button>
+            <a href="payments.html" id="back-link" class="btn-action btn-outline">
+                <i class="fas fa-arrow-left"></i> Back to Ledger
+            </a>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        const loadInvoice = async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            if(!id) return alert('Reference ID missing.');
+
+            try {
+                const inv = await fetchAPI(`/payments/invoice/${id}`);
+                
+                document.getElementById('inv-id').textContent = inv.invoice_id.toString().padStart(6, '0');
+                document.getElementById('inv-date').textContent = new Date(inv.payment_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                
+                document.getElementById('member-name').textContent = inv.member_name;
+                document.getElementById('member-email').textContent = inv.email;
+                document.getElementById('member-phone').textContent = inv.phone || 'N/A';
+                
+                const statusBadge = document.getElementById('inv-status-badge');
+                statusBadge.textContent = inv.status;
+                statusBadge.className = 'status-badge ' + (inv.status.toLowerCase() === 'paid' ? 'status-paid' : 'status-pending');
+
+                document.getElementById('plan-name').textContent = inv.plan_name || 'Individual Membership';
+                document.getElementById('plan-desc').textContent = inv.description || 'Subscription renewal and facility access.';
+                
+                const amt = parseFloat(inv.amount).toFixed(2);
+                document.getElementById('unit-price').textContent = amt;
+                document.getElementById('inv-amount').textContent = amt;
+                document.getElementById('subtotal').textContent = amt;
+                document.getElementById('inv-total').textContent = amt;
+
+                // Adjust back link if member
+                const user = JSON.parse(localStorage.getItem('gym_user') || '{}');
+                if(user.role === 'member') {
+                    document.getElementById('back-link').href = 'member-dashboard.html';
+                    document.getElementById('back-link').innerHTML = '<i class="fas fa-arrow-left"></i> Back to Dashboard';
+                }
+
+            } catch (error) {
+                alert('Cloud record retrieval failed: ' + error.message);
+            }
+        };
+
+        loadInvoice();
+    </script>
+</body>
+</html>

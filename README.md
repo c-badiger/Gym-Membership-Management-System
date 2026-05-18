@@ -1,84 +1,62 @@
-# Gym Membership Management System
+# Gym Membership Management System (Phase 2 Refined)
 
-A production-quality full-stack web application designed for academic project submissions. Built with Node.js, Express, MySQL, and Vanilla Frontend.
+A production-quality full-stack web application designed for academic project submissions (VTU level). Built with Node.js, Express, MySQL, and Vanilla Frontend.
 
-## 🗄️ Database ER Diagram (Text Explanation)
+## 🗄️ Database ER Diagram (3NF Normalized)
 
-The database `gym_db` is normalized up to 3NF and consists of 5 main tables:
+The database `gym_db` is normalized up to 3NF and consists of 9 main tables:
 
 1. **Users** (Admin/Staff Login)
-   - `id` (PK)
-   - `username` (Unique)
-   - `password` (Hashed)
-   - `role`
-   - *Relationships:* Independent table for system access control.
+   - `id` (PK), `username`, `password`, `role`
 
-2. **Members**
-   - `id` (PK)
-   - `name`, `email` (Unique), `phone`, `join_date`, `status`
-   - *Relationships:* 
-     - 1-to-many with `Subscriptions` (One member can have multiple subscriptions over time).
-     - 1-to-many with `Payments` (One member can make multiple payments).
+2. **Members** (Primary Table)
+   - `id` (PK), `name`, `email` (Optional), `mobile_number` (Unique, Primary Login), `password`, `join_date`, `status`, `trainer_id`, `workout_plan_id`, `diet_plan_id`
+   - *Strict Validation:* Mobile number must be exactly 10 digits.
 
 3. **Membership_Plans**
-   - `id` (PK)
-   - `name`, `description`, `duration_months`, `price`
-   - *Relationships:* 1-to-many with `Subscriptions` (One plan can be assigned to multiple subscriptions).
+   - `id` (PK), `name`, `description`, `duration_months`, `price`, `discount_price`
 
 4. **Subscriptions**
-   - `id` (PK)
-   - `member_id` (FK -> Members.id)
-   - `plan_id` (FK -> Membership_Plans.id)
-   - `start_date`, `end_date`, `status`
-   - *Relationships:* 
-     - Links `Members` and `Membership_Plans` (Many-to-Many resolved).
-     - 1-to-many with `Payments` (One subscription can be paid via one or multiple payments, usually 1-to-1 in this setup).
+   - `id` (PK), `member_id` (FK), `plan_id` (FK), `start_date`, `end_date`, `status`
 
 5. **Payments**
-   - `id` (PK)
-   - `member_id` (FK -> Members.id)
-   - `subscription_id` (FK -> Subscriptions.id)
-   - `amount`, `payment_date`, `status`
-   - *Relationships:* Tracks the financial transaction for a specific subscription and member.
+   - `id` (PK), `member_id` (FK), `subscription_id` (FK), `amount`, `payment_date`, `status`
+
+6. **Attendance**
+   - `id` (PK), `member_id` (FK), `date`, `status`
+
+7. **Trainers**
+   - `id` (PK), `name`, `specialization`
+    
+8. **Workout_Plans**
+   - `id` (PK), `title`, `description`, `exercises` (JSON)
+
+9. **Diet_Plans**
+   - `id` (PK), `title`, `description`, `meals` (JSON)
 
 ## 🚀 Instructions to Run
 
 ### 1. Database Setup
 1. Ensure you have **MySQL/XAMPP/WAMP** installed and running.
-2. Open your MySQL client (e.g., phpMyAdmin or MySQL Workbench).
-3. Execute the SQL script located at `database/schema.sql` to create the schema, tables, and insert default sample data.
+2. Execute the SQL script located at `database/schema.sql`.
 
 ### 2. Backend Setup
-1. Open a terminal and navigate to the `backend` folder:
-   ```bash
-   cd backend
-   ```
-2. Install the required Node.js dependencies:
-   ```bash
-   npm install
-   ```
-3. Check the `.env` file in the `backend` folder and ensure your MySQL credentials are correct:
-   ```env
-   DB_USER=root
-   DB_PASS=
-   DB_NAME=gym_db
-   ```
-4. Start the server:
-   ```bash
-   npm run dev
-   ```
-   *The server will start running on http://localhost:5000*
+1. `cd backend`
+2. `npm install`
+3. Configure `.env` with your MySQL credentials.
+4. `npm run dev`
 
 ### 3. Frontend Setup
-1. You can simply open the `index.html` file in the root folder in any web browser.
-2. Alternatively, use a tool like **Live Server** (VS Code Extension) to serve the folder to prevent CORS or local file protocol issues.
-3. Login using the default admin credentials:
-   - **Username:** `admin`
-   - **Password:** `admin123`
+1. Open `index.html` in your browser.
+2. **Admin Portal:** `admin` / `admin123`.
+3. **Member Portal:** Use registered 10-digit mobile number and password (e.g., `9876543210` / `member123`).
 
-## 🌟 Key Features Implemented
-- JWT Authentication & Secure Password Hashing (bcrypt)
-- Advanced SQL Analytics (INNER JOIN, GROUP BY, Aggregate functions)
-- Responsive Glassmorphism UI Dashboard
-- Chart.js Data Visualizations
-- Complete CRUD operations for Members, Plans, and Payments.
+## 🌟 Key Features & Improvements
+
+- **Mobile-First Authentication:** Transitioned from email to **Mobile Number** as the primary identifier. Implemented strict 10-digit validation on both frontend and backend.
+- **Enriched Member Home:** A visually stunning Home section for members with motivational banners and feature cards.
+- **Structured Diet & Workout:** Upgraded plans to support structured JSON data, rendering detailed meals and exercise routines in a clean card layout.
+- **Removed QR Code Attendance:** Streamlined the system by removing QR-based attendance to focus on profile and plan management.
+- **Advanced Dashboard Analytics:** Integrated `Chart.js` for real-time revenue and membership trends.
+- **Live Notifications:** Expiring plan warnings and payment reminders directly on the Member UI.
+- **3NF Database Adherence:** Ensuring data integrity and performance through strict normalization.

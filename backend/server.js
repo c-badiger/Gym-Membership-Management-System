@@ -17,12 +17,16 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const memberRoutes = require('./routes/memberRoutes');
 const planRoutes = require('./routes/planRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const attendanceRoutes = require('./routes/attendanceRoutes');
+const featuresRoutes = require('./routes/featuresRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/members', memberRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/features', featuresRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

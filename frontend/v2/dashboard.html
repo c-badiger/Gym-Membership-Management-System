@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymPro | Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Include Phosphor Icons or FontAwesome for modern icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+  <div class="app-layout">
+    
+    <!-- Sidebar Overlay for mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-icon">G</div>
+        <div class="logo-text">GymPro</div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item active">
+          <i class="ph ph-squares-four"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="members.html" class="nav-item">
+          <i class="ph ph-users"></i>
+          <span>Members</span>
+        </a>
+        <a href="plans.html" class="nav-item">
+          <i class="ph ph-tag"></i>
+          <span>Plans</span>
+        </a>
+        <a href="payments.html" class="nav-item">
+          <i class="ph ph-credit-card"></i>
+          <span>Payments</span>
+        </a>
+        <a href="diet.html" class="nav-item">
+          <i class="ph ph-apple-logo"></i>
+          <span>Diet & Workout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Topbar -->
+      <header class="topbar">
+        <button class="mobile-toggle" id="mobile-toggle">
+          <i class="ph ph-list"></i>
+        </button>
+
+        <div class="search-bar d-none d-md-block">
+          <i class="ph ph-magnifying-glass"></i>
+          <input type="text" placeholder="Search members, plans, etc...">
+        </div>
+
+        <div class="topbar-actions">
+          <button class="btn-icon">
+            <i class="ph ph-bell"></i>
+            <span class="badge"></span>
+          </button>
+          
+          <div class="user-profile">
+            <!-- Using a placeholder image for user -->
+            <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Admin" class="avatar">
+            <div class="user-info">
+              <div class="user-name">Alex Johnson</div>
+              <div class="user-role">Administrator</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+        <div class="page-header">
+          <h1 class="page-title">Dashboard Overview</h1>
+          <button class="btn btn-primary">
+            <i class="ph ph-plus"></i> New Member
+          </button>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Total Members</h3>
+              <div class="stat-value">1,248</div>
+              <div class="stat-trend trend-up">
+                <i class="ph ph-arrow-up-right"></i>
+                <span>12% this month</span>
+              </div>
+            </div>
+            <div class="stat-icon icon-blue">
+              <i class="ph ph-users"></i>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Monthly Revenue</h3>
+              <div class="stat-value">$45,231</div>
+              <div class="stat-trend trend-up">
+                <i class="ph ph-arrow-up-right"></i>
+                <span>8% this month</span>
+              </div>
+            </div>
+            <div class="stat-icon icon-green">
+              <i class="ph ph-currency-dollar"></i>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Active Plans</h3>
+              <div class="stat-value">842</div>
+              <div class="stat-trend trend-down">
+                <i class="ph ph-arrow-down-right"></i>
+                <span>2% this month</span>
+              </div>
+            </div>
+            <div class="stat-icon icon-orange">
+              <i class="ph ph-activity"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layout for Charts and Tables -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px;">
+          
+          <!-- Revenue Chart (CSS Based) -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Revenue Overview</h2>
+              <select class="form-control" style="width: auto; padding: 6px 12px;">
+                <option>This Year</option>
+                <option>Last Year</option>
+              </select>
+            </div>
+            <div class="panel-body" style="padding: 24px;">
+              <div class="chart-container">
+                <div class="bar-wrapper"><div class="bar" style="height: 40%;"></div><span class="bar-label">Jan</span></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 55%;"></div><span class="bar-label">Feb</span></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 45%;"></div><span class="bar-label">Mar</span></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 60%;"></div><span class="bar-label">Apr</span></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 80%;"></div><span class="bar-label">May</span></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 70%;"></div><span class="bar-label">Jun</span></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 85%;"></div><span class="bar-label">Jul</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Recent Activity</h2>
+            </div>
+            <div class="panel-body" style="padding: 24px;">
+              <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div style="display: flex; gap: 16px;">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background-color: var(--success-bg); color: var(--success); display: flex; align-items: center; justify-content: center;">
+                    <i class="ph ph-check"></i>
+                  </div>
+                  <div>
+                    <div style="font-weight: 500; font-size: 14px; margin-bottom: 4px;">Payment Received</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">$120 from Sarah Jenkins</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">2 mins ago</div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 16px;">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #e0e7ff; color: var(--primary); display: flex; align-items: center; justify-content: center;">
+                    <i class="ph ph-user-plus"></i>
+                  </div>
+                  <div>
+                    <div style="font-weight: 500; font-size: 14px; margin-bottom: 4px;">New Member</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">Mike Ross joined Pro Plan</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">1 hr ago</div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 16px;">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #fef3c7; color: var(--warning); display: flex; align-items: center; justify-content: center;">
+                    <i class="ph ph-warning"></i>
+                  </div>
+                  <div>
+                    <div style="font-weight: 500; font-size: 14px; margin-bottom: 4px;">Plan Expiring</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">5 members expiring today</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">3 hrs ago</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Members Table -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Recent Members</h2>
+            <a href="members.html" class="btn btn-outline btn-sm">View All</a>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Plan</th>
+                  <th>Join Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="member-cell">
+                      <img src="https://i.pravatar.cc/150?u=1" class="member-avatar" alt="Avatar">
+                      <div>
+                        <div class="member-name">Sarah Jenkins</div>
+                        <div class="member-email">sarah.j@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Pro Annual</td>
+                  <td>Oct 24, 2023</td>
+                  <td><span class="status-badge status-active">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="member-cell">
+                      <img src="https://i.pravatar.cc/150?u=2" class="member-avatar" alt="Avatar">
+                      <div>
+                        <div class="member-name">Mike Ross</div>
+                        <div class="member-email">mike.r@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Monthly Basic</td>
+                  <td>Oct 23, 2023</td>
+                  <td><span class="status-badge status-active">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="member-cell">
+                      <img src="https://i.pravatar.cc/150?u=3" class="member-avatar" alt="Avatar">
+                      <div>
+                        <div class="member-name">John Doe</div>
+                        <div class="member-email">j.doe@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Premium</td>
+                  <td>Sep 15, 2023</td>
+                  <td><span class="status-badge status-inactive">Expired</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>

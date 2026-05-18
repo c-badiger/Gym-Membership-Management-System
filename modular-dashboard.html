@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modular Dashboard - GymPro</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="modular-dashboard.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="top-navbar">
+    <div class="logo">
+      <i class="fas fa-dumbbell"></i> GymPro
+    </div>
+    <nav class="nav-tabs">
+      <a href="#dashboard" class="active">Dashboard</a>
+      <a href="#members">Members</a>
+      <a href="#plans">Plans</a>
+      <a href="#payments">Payments</a>
+      <a href="#diet">Diet</a>
+    </nav>
+    <div class="nav-right">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search modules...">
+      </div>
+      <div class="profile-avatar">
+        AD
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Grid -->
+  <main class="dashboard-container">
+
+    <!-- Row 1: Small Cards (Span 3 each = 12 columns) -->
+    <div class="module col-span-3">
+      <div class="module-header">
+        <div class="module-title"><i class="fas fa-users" style="color: var(--primary)"></i> Total Members</div>
+      </div>
+      <div class="stat-value">1,248</div>
+      <div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 12% this month</div>
+    </div>
+
+    <div class="module col-span-3">
+      <div class="module-header">
+        <div class="module-title"><i class="fas fa-wallet" style="color: var(--success)"></i> Revenue</div>
+      </div>
+      <div class="stat-value">$24,500</div>
+      <div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 8% this month</div>
+    </div>
+
+    <div class="module col-span-3">
+      <div class="module-header">
+        <div class="module-title"><i class="fas fa-clipboard-check" style="color: var(--warning)"></i> Active Plans</div>
+      </div>
+      <div class="stat-value">856</div>
+      <div class="stat-trend trend-down"><i class="fas fa-arrow-down"></i> 2% this month</div>
+    </div>
+
+    <div class="module col-span-3">
+      <div class="module-header">
+        <div class="module-title"><i class="fas fa-door-open" style="color: var(--primary)"></i> Daily Check-ins</div>
+      </div>
+      <div class="stat-value">342</div>
+      <div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 15% today</div>
+    </div>
+
+    <!-- Row 2: Members Table (Span 8) and Form Module (Span 4) -->
+    <div class="module col-span-8">
+      <div class="module-header">
+        <div class="module-title">Recent Members</div>
+        <a href="#" class="module-action">View All</a>
+      </div>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Member Name</th>
+              <th>Phone</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="membersTableBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="module col-span-4 form-module">
+      <div class="module-header">
+        <div class="module-title">Add/Edit Member</div>
+      </div>
+      <form id="memberForm">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="memberName" class="form-control" required placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="memberPhone" class="form-control" required placeholder="555-0192">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="memberStatus" class="form-control">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Payment Status</label>
+          <select id="memberPayment" class="form-control">
+            <option value="Paid">Paid</option>
+            <option value="Unpaid">Unpaid</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+          <i class="fas fa-save"></i> Save Member
+        </button>
+      </form>
+    </div>
+
+    <!-- Row 3: Payments Module (Span 12) -->
+    <div class="module col-span-12">
+      <div class="module-header">
+        <div class="module-title">Recent Payments</div>
+        <a href="#" class="module-action">Manage Payments</a>
+      </div>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="paymentsTableBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Row 4: Plans Module (Span 12) -->
+    <div class="module col-span-12">
+      <div class="module-header">
+        <div class="module-title">Membership Plans Overview</div>
+        <a href="#" class="module-action">Edit Plans</a>
+      </div>
+      <div class="plans-internal-grid">
+        <div class="plan-card">
+          <div class="plan-title">Basic Plan</div>
+          <div class="plan-price">$29<span>/mo</span></div>
+          <button class="btn" style="width: 100%; background: var(--bg-color); color: var(--text-main);">Select</button>
+        </div>
+        <div class="plan-card best-plan">
+          <div class="best-badge">Most Popular</div>
+          <div class="plan-title">Pro Plan</div>
+          <div class="plan-price">$49<span>/mo</span></div>
+          <button class="btn btn-primary" style="width: 100%;">Select</button>
+        </div>
+        <div class="plan-card">
+          <div class="plan-title">Elite Plan</div>
+          <div class="plan-price">$89<span>/mo</span></div>
+          <button class="btn" style="width: 100%; background: var(--bg-color); color: var(--text-main);">Select</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="modular-dashboard.js"></script>
+</body>
+</html>

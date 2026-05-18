@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard - GymPro</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-dumbbell"></i> GymPro
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item"><a href="#" class="nav-link active" onclick="showSection('home')"><i class="fas fa-home"></i> Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" onclick="showSection('profile')"><i class="fas fa-user-circle"></i> My Profile</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" onclick="showSection('plans')"><i class="fas fa-utensils"></i> Diet & Workout</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" onclick="showSection('achievements')"><i class="fas fa-trophy"></i> Achievements</a></li>
+                <li class="nav-item" style="margin-top: auto;">
+                    <a href="#" class="nav-link" onclick="logout()" style="color: var(--danger);">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <nav class="top-navbar">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <i class="fas fa-bars mobile-toggle" id="mobile-toggle"></i>
+                    <div class="nav-title" id="section-title">Home</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 2rem;">
+                    <div style="display: flex; flex-direction: column; width: 180px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                            <span class="level-badge">Lv 3 <i class="fas fa-fire"></i></span>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--secondary);">450 / 1000 XP</span>
+                        </div>
+                        <div class="xp-bar-container">
+                            <div class="xp-bar-fill" style="width: 45%;"></div>
+                        </div>
+                    </div>
+                    <div class="user-profile">
+                        <span id="user-name-nav" style="font-weight: 500;">Member</span>
+                        <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--text-secondary);"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="page-content">
+                
+                <!-- Home Section -->
+                <div id="home-section" class="dashboard-section">
+                    <div class="home-banner">
+                        <h1>STAY HUNGRY.<br>STAY FIT.</h1>
+                        <p>Push your limits every day. Your only competition is the person you were yesterday.</p>
+                        <button class="btn" style="width: auto;" onclick="showSection('plans')">Explore My Plans</button>
+                    </div>
+
+                    <div class="stats-grid" style="margin-bottom: 2rem;">
+                        <div class="stat-card glass gamified-card-hover" style="flex-direction: row; align-items: center;">
+                            <div class="circular-progress">
+                                <div class="circular-progress-value">80%</div>
+                            </div>
+                            <div style="margin-left: 1rem;">
+                                <h3>Daily Goal</h3>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary);">4/5 Workouts Complete</p>
+                            </div>
+                        </div>
+                        <div class="stat-card glass gamified-card-hover" style="flex-direction: row; align-items: center;">
+                            <div class="stat-icon" style="background: rgba(249, 115, 22, 0.1); color: var(--accent);"><i class="fas fa-fire"></i></div>
+                            <div style="margin-left: 1rem;">
+                                <h3>Current Streak</h3>
+                                <p style="font-size: 1.5rem; font-weight: 700;">12 Days</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="features-grid">
+                        <div class="feature-card gamified-card-hover">
+                            <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=2070&auto=format&fit=crop" alt="Workout">
+                            <div class="feature-overlay">
+                                <h3>Modern Equipment</h3>
+                            </div>
+                        </div>
+                        <div class="feature-card gamified-card-hover">
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=2070&auto=format&fit=crop" alt="Diet">
+                            <div class="feature-overlay">
+                                <h3>Personalized Nutrition</h3>
+                            </div>
+                        </div>
+                        <div class="feature-card gamified-card-hover">
+                            <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?q=80&w=1887&auto=format&fit=crop" alt="Yoga">
+                            <div class="feature-overlay">
+                                <h3>Professional Trainers</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div id="profile-section" class="dashboard-section" style="display: none;">
+                    <div class="stats-grid">
+                        <div class="stat-card glass">
+                            <div class="stat-header">
+                                <div class="stat-icon"><i class="fas fa-id-card"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Personal Info</h3>
+                                <p id="p-name" style="font-size: 1.2rem; margin-top: 1rem;">-</p>
+                                <span id="p-mobile" style="color: var(--text-secondary); font-size: 0.9rem;">-</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glass">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--secondary);"><i class="fas fa-gem"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Active Membership</h3>
+                                <p id="plan-name" style="font-size: 1.2rem; margin-top: 1rem;">No Active Plan</p>
+                                <span id="plan-dates" style="color: var(--text-secondary); font-size: 0.9rem;">-</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glass">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);"><i class="fas fa-wallet"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Payment Status</h3>
+                                <p id="pay-status-disp" style="font-size: 1.2rem; margin-top: 1rem;">UNPAID</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glass">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;"><i class="fas fa-user-ninja"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Personal Trainer</h3>
+                                <p id="trainer-name" style="font-size: 1.2rem; margin-top: 1rem;">No Trainer</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="notifications-container"></div>
+
+                    <div style="margin-top: 3rem;">
+                        <h3 style="margin-bottom: 2rem;">Available Membership Plans</h3>
+                        <div class="stats-grid" id="available-plans"></div>
+                    </div>
+                </div>
+
+                <!-- Diet & Workout Section -->
+                <div id="plans-section" class="dashboard-section" style="display: none;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 2rem;">
+                        <!-- Diet Plan Card -->
+                        <div class="glass plan-detail-card" id="diet-plan-card">
+                            <div class="plan-header">
+                                <div>
+                                    <h3 id="diet-title" style="margin-bottom: 0.5rem;">No Diet Plan</h3>
+                                    <p id="diet-description" style="color: var(--text-secondary); font-size: 0.9rem;"></p>
+                                </div>
+                                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--secondary);"><i class="fas fa-leaf"></i></div>
+                            </div>
+                            <div id="diet-meals-container"></div>
+                        </div>
+
+                        <!-- Workout Plan Card -->
+                        <div class="glass plan-detail-card" id="workout-plan-card">
+                            <div class="plan-header">
+                                <div>
+                                    <h3 id="workout-title" style="margin-bottom: 0.5rem;">No Workout Plan</h3>
+                                    <p id="workout-description" style="color: var(--text-secondary); font-size: 0.9rem;"></p>
+                                </div>
+                                <div class="stat-icon" style="background: rgba(99, 102, 241, 0.1); color: var(--primary);"><i class="fas fa-fire"></i></div>
+                            </div>
+                            <div id="workout-exercises-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements Section -->
+                <div id="achievements-section" class="dashboard-section" style="display: none;">
+                    <div class="stats-grid">
+                        <div class="achievement-card unlocked">
+                            <div class="achievement-icon"><i class="fas fa-running"></i></div>
+                            <div class="achievement-info">
+                                <h4>First Step</h4>
+                                <p>Joined GymPro.</p>
+                            </div>
+                            <div class="tag-popular" style="background: var(--secondary);">UNLOCKED</div>
+                        </div>
+                        <div class="achievement-card unlocked">
+                            <div class="achievement-icon"><i class="fas fa-fire"></i></div>
+                            <div class="achievement-info">
+                                <h4>7-Day Streak</h4>
+                                <p>Worked out for 7 consecutive days.</p>
+                            </div>
+                            <div class="tag-popular" style="background: var(--secondary);">UNLOCKED</div>
+                        </div>
+                        <div class="achievement-card locked">
+                            <div class="achievement-icon"><i class="fas fa-dumbbell"></i></div>
+                            <div class="achievement-info">
+                                <h4>Heavy Lifter</h4>
+                                <p>Complete 50 weight training sessions.</p>
+                                <div class="xp-bar-container" style="height: 6px; margin-top: 8px;">
+                                    <div class="xp-bar-fill" style="width: 30%; background: var(--text-secondary);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        checkAuth();
+
+        const toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        };
+
+        document.getElementById('mobile-toggle')?.addEventListener('click', toggleSidebar);
+
+        const showSection = (section) => {
+            document.querySelectorAll('.dashboard-section').forEach(s => s.style.display = 'none');
+            document.getElementById(`${section}-section`).style.display = 'block';
+            
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            const activeLink = document.querySelector(`.nav-link[onclick*="${section}"]`);
+            if(activeLink) activeLink.classList.add('active');
+            
+            const titles = { home: 'Home', profile: 'My Profile', plans: 'Diet & Workout', achievements: 'Achievements' };
+            document.getElementById('section-title').textContent = titles[section];
+            if(window.innerWidth <= 1024) toggleSidebar();
+        };
+
+        const loadDashboard = async () => {
+            try {
+                const data = await fetchAPI('/members/profile');
+                
+                document.getElementById('user-name-nav').textContent = data.profile.name;
+
+                // Profile Section
+                document.getElementById('p-name').textContent = data.profile.name;
+                document.getElementById('p-mobile').textContent = data.profile.mobile_number;
+
+                if (data.activePlan) {
+                    document.getElementById('plan-name').textContent = data.activePlan.name;
+                    document.getElementById('plan-dates').textContent = `${new Date(data.activePlan.start_date).toLocaleDateString()} - ${new Date(data.activePlan.end_date).toLocaleDateString()}`;
+                }
+
+                document.getElementById('trainer-name').textContent = data.profile.trainer_name || 'Assigned soon';
+
+                const psElem = document.getElementById('pay-status-disp');
+                psElem.textContent = data.payment_status;
+                psElem.style.color = data.payment_status === 'PAID' ? 'var(--secondary)' : 'var(--danger)';
+
+                // Diet & Workout Section
+                if (data.profile.diet_title) {
+                    document.getElementById('diet-title').textContent = data.profile.diet_title;
+                    document.getElementById('diet-description').textContent = data.profile.diet_desc;
+                    
+                    if (data.profile.meals) {
+                        const m = data.profile.meals;
+                        document.getElementById('diet-meals-container').innerHTML = `
+                            <div style="margin-top: 2rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                    <h4 style="color: var(--text-secondary); font-size: 0.8rem; letter-spacing: 1px;">DAILY NUTRITION</h4>
+                                    <span class="badge badge-active">${m.calories} KCAL</span>
+                                </div>
+                                <div style="display: grid; gap: 1rem;">
+                                    ${Object.entries(m.meals).map(([meal, desc]) => `
+                                        <div class="glass" style="padding: 1.2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02);">
+                                            <span style="font-weight: 600; text-transform: capitalize;">${meal}</span>
+                                            <span style="color: var(--text-secondary); font-size: 0.9rem;">${desc}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
+                if (data.profile.workout_title) {
+                    document.getElementById('workout-title').textContent = data.profile.workout_title;
+                    document.getElementById('workout-description').textContent = data.profile.workout_desc;
+                    
+                    if (data.profile.exercises) {
+                        const e = data.profile.exercises;
+                        document.getElementById('workout-exercises-container').innerHTML = `
+                            <div style="margin-top: 2rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                    <h4 style="color: var(--text-secondary); font-size: 0.8rem; letter-spacing: 1px;">EXERCISE ROUTINE</h4>
+                                    <span class="badge badge-active">${e.schedule}</span>
+                                </div>
+                                <div style="display: grid; gap: 1rem;">
+                                    ${e.routine.map(r => `
+                                        <div class="glass" style="padding: 1.2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02);">
+                                            <span style="font-weight: 600;">${r.exercise}</span>
+                                            <span class="badge" style="background: rgba(99, 102, 241, 0.1); color: var(--primary);">${r.sets}x${r.reps}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
+                loadAvailablePlans();
+                loadNotifications();
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        const loadAvailablePlans = async () => {
+            try {
+                const plans = await fetchAPI('/plans');
+                const container = document.getElementById('available-plans');
+                container.innerHTML = plans.map(p => `
+                    <div class="glass plan-card">
+                        <h3 style="font-size: 1.5rem;">${p.name}</h3>
+                        <div class="plan-price">
+                            <span class="old">$${p.price}</span>
+                            <span class="new">$${p.discount_price}</span>
+                            <span style="color: var(--text-secondary); font-size: 0.9rem;">per ${p.duration_months} months</span>
+                        </div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check-circle"></i> Full Gym Access</li>
+                            <li><i class="fas fa-check-circle"></i> Workout Routine</li>
+                            <li><i class="fas fa-check-circle"></i> Diet Guidance</li>
+                            ${p.duration_months >= 3 ? '<li><i class="fas fa-check-circle"></i> Personal Trainer</li>' : ''}
+                        </ul>
+                        <button class="btn" onclick="buyPlan(${p.id})">Select Plan</button>
+                    </div>
+                `).join('');
+            } catch(e) { console.error(e); }
+        };
+
+        const loadNotifications = async () => {
+            try {
+                const notifications = await fetchAPI('/features/notifications');
+                const container = document.getElementById('notifications-container');
+                if (notifications && notifications.length > 0) {
+                    container.innerHTML = notifications.map(n => `
+                        <div class="glass" style="padding: 1.5rem; margin-top: 1.5rem; border-left: 4px solid ${n.type === 'warning' ? '#fbbf24' : '#ef4444'}; display: flex; align-items: center; gap: 1rem;">
+                            <i class="fas fa-${n.type === 'warning' ? 'exclamation-triangle' : 'bell'}" style="color: ${n.type === 'warning' ? '#fbbf24' : '#ef4444'};"></i>
+                            <div>
+                                <h4 style="font-size: 0.95rem;">${n.type.toUpperCase()}</h4>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem;">${n.message}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch(e) { console.error(e); }
+        };
+
+        const buyPlan = (planId) => { window.location.href = `checkout.html?planId=${planId}`; };
+
+        loadDashboard();
+    </script>
+</body>
+</html>

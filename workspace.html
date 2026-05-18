@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymPro Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="workspace.css">
+</head>
+<body>
+  <div class="workspace">
+    <!-- Top Navbar -->
+    <header class="top-navbar">
+      <div class="logo">
+        <i class="fas fa-dumbbell" style="color: var(--primary);"></i>
+        GymPro
+      </div>
+      <nav class="nav-tabs">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#members" class="active">Members</a>
+        <a href="#plans">Plans</a>
+        <a href="#payments">Payments</a>
+        <a href="#diet">Diet</a>
+      </nav>
+      <div class="nav-right">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search members...">
+        </div>
+        <div class="profile">
+          <div class="avatar">AD</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Section 1: Stats Overview -->
+      <section class="stats-overview">
+        <div class="stat-card">
+          <div class="stat-title">Total Members</div>
+          <div class="stat-value">1,248</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Revenue (Monthly)</div>
+          <div class="stat-value">$24,500</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Active Plans</div>
+          <div class="stat-value">856</div>
+        </div>
+      </section>
+
+      <!-- Section 2: Members Workspace -->
+      <section class="members-workspace">
+        
+        <!-- Left: Members List -->
+        <div class="members-list-panel">
+          <div class="panel-header">
+            <h2>Members Directory</h2>
+            <button class="btn-icon" title="Filter"><i class="fas fa-filter"></i></button>
+          </div>
+          <div class="members-list" id="membersList">
+            <!-- Members rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Right: Form Panel -->
+        <div class="form-panel">
+          <div class="panel-header">
+            <h2 id="formTitle">Add Member</h2>
+          </div>
+          <form class="member-form" id="memberForm">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="name" class="form-control" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="email" class="form-control" required placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="text" id="phone" class="form-control" required placeholder="555-0123">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group">
+                <label>Status</label>
+                <select id="status" class="form-control">
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Payment</label>
+                <select id="payment" class="form-control">
+                  <option value="Paid">Paid</option>
+                  <option value="Unpaid">Unpaid</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 8px;">
+              <i class="fas fa-save"></i> Save Member
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Section 3: Plans Page (Demo) -->
+      <section class="plans-section">
+        <h2 class="section-title">Membership Plans</h2>
+        <div class="plans-grid">
+          
+          <div class="plan-card">
+            <div class="plan-name">Basic Plan</div>
+            <div class="plan-price">$29<span>/mo</span></div>
+            <ul class="plan-features">
+              <li><i class="fas fa-check"></i> Access to gym equipment</li>
+              <li><i class="fas fa-check"></i> Locker room access</li>
+              <li style="opacity: 0.5;"><i class="fas fa-times" style="color: inherit;"></i> Personal trainer</li>
+              <li style="opacity: 0.5;"><i class="fas fa-times" style="color: inherit;"></i> Diet plan</li>
+            </ul>
+            <button class="btn" style="background-color: #f1f5f9; color: var(--text-main); width: 100%;">Select Plan</button>
+          </div>
+
+          <div class="plan-card best-value">
+            <div class="badge-best">Most Popular</div>
+            <div class="plan-name">Pro Plan</div>
+            <div class="plan-price">$49<span>/mo</span></div>
+            <ul class="plan-features">
+              <li><i class="fas fa-check"></i> Access to gym equipment</li>
+              <li><i class="fas fa-check"></i> Locker room access</li>
+              <li><i class="fas fa-check"></i> Group fitness classes</li>
+              <li><i class="fas fa-check"></i> 1 Personal training session</li>
+            </ul>
+            <button class="btn btn-primary" style="width: 100%;">Select Plan</button>
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-name">Elite Plan</div>
+            <div class="plan-price">$89<span>/mo</span></div>
+            <ul class="plan-features">
+              <li><i class="fas fa-check"></i> All Pro Plan features</li>
+              <li><i class="fas fa-check"></i> Unlimited personal training</li>
+              <li><i class="fas fa-check"></i> Custom diet plan</li>
+              <li><i class="fas fa-check"></i> Spa access</li>
+            </ul>
+            <button class="btn" style="background-color: #f1f5f9; color: var(--text-main); width: 100%;">Select Plan</button>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="workspace.js"></script>
+</body>
+</html>

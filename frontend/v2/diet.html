@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymPro | Diet & Workout</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-icon">G</div>
+        <div class="logo-text">GymPro</div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <i class="ph ph-squares-four"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="members.html" class="nav-item">
+          <i class="ph ph-users"></i>
+          <span>Members</span>
+        </a>
+        <a href="plans.html" class="nav-item">
+          <i class="ph ph-tag"></i>
+          <span>Plans</span>
+        </a>
+        <a href="payments.html" class="nav-item">
+          <i class="ph ph-credit-card"></i>
+          <span>Payments</span>
+        </a>
+        <a href="diet.html" class="nav-item active">
+          <i class="ph ph-apple-logo"></i>
+          <span>Diet & Workout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-toggle" id="mobile-toggle">
+          <i class="ph ph-list"></i>
+        </button>
+
+        <div class="search-bar d-none d-md-block">
+          <i class="ph ph-magnifying-glass"></i>
+          <input type="text" placeholder="Search routines, diets...">
+        </div>
+
+        <div class="topbar-actions">
+          <div class="user-profile">
+            <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Admin" class="avatar">
+          </div>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div class="page-header">
+          <h1 class="page-title">Diet & Workout Programs</h1>
+          <button class="btn btn-primary">
+            <i class="ph ph-plus"></i> Create Program
+          </button>
+        </div>
+
+        <!-- Filters -->
+        <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+          <button class="btn btn-primary">All</button>
+          <button class="btn btn-outline">Beginner</button>
+          <button class="btn btn-outline">Intermediate</button>
+          <button class="btn btn-outline">Advanced</button>
+          <button class="btn btn-outline" style="margin-left: auto;">
+            <i class="ph ph-faders"></i> Filter
+          </button>
+        </div>
+
+        <div class="plans-grid">
+          
+          <!-- Beginner Program -->
+          <div class="panel program-card">
+            <div class="program-image">
+              <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Beginner Workout">
+              <div class="program-level" style="color: var(--success);">Beginner</div>
+            </div>
+            <div class="program-content">
+              <h3 class="program-title">Foundation & Form</h3>
+              <p class="program-desc">A perfect starting point for new members. Focuses on proper form, basic compound movements, and a simple caloric deficit diet plan.</p>
+              
+              <div class="program-meta">
+                <div><i class="ph ph-barbell"></i> 3 Days/week</div>
+                <div><i class="ph ph-clock"></i> 45 mins</div>
+              </div>
+              
+              <button class="btn btn-outline" style="width: 100%;">View Details</button>
+            </div>
+          </div>
+
+          <!-- Intermediate Program -->
+          <div class="panel program-card">
+            <div class="program-image">
+              <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Intermediate Workout">
+              <div class="program-level" style="color: var(--warning);">Intermediate</div>
+            </div>
+            <div class="program-content">
+              <h3 class="program-title">Hypertrophy Core</h3>
+              <p class="program-desc">Designed for muscle building and moderate strength gains. Includes a macro-tracked diet plan with calculated protein intake.</p>
+              
+              <div class="program-meta">
+                <div><i class="ph ph-barbell"></i> 4 Days/week</div>
+                <div><i class="ph ph-clock"></i> 60 mins</div>
+              </div>
+              
+              <button class="btn btn-outline" style="width: 100%;">View Details</button>
+            </div>
+          </div>
+
+          <!-- Advanced Program -->
+          <div class="panel program-card">
+            <div class="program-image">
+              <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Advanced Workout">
+              <div class="program-level" style="color: var(--danger);">Advanced</div>
+            </div>
+            <div class="program-content">
+              <h3 class="program-title">Elite Powerlifting</h3>
+              <p class="program-desc">High-intensity program focusing on heavy compound lifts. Paired with a strict high-carb, high-protein bulking diet protocol.</p>
+              
+              <div class="program-meta">
+                <div><i class="ph ph-barbell"></i> 5 Days/week</div>
+                <div><i class="ph ph-clock"></i> 90 mins</div>
+              </div>
+              
+              <button class="btn btn-outline" style="width: 100%;">View Details</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>

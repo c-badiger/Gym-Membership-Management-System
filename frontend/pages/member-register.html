@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join GymPro - Member Registration</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card glass" style="max-width: 550px; padding: 3rem;">
+            <h2 style="margin-bottom: 0.5rem;">Join the Arena</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2.5rem;">Create your character and start your fitness quest.</p>
+            
+            <form id="register-form">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="name" class="form-control" required placeholder="John Doe">
+                </div>
+                
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <div style="display: flex; gap: 0.8rem;">
+                        <input type="text" id="mobile_number" class="form-control" required placeholder="10-digit number" maxlength="10">
+                        <button type="button" class="btn btn-secondary" id="send-otp-btn" style="width: auto; white-space: nowrap; padding: 0 1.5rem; font-size: 0.85rem;">Send OTP</button>
+                    </div>
+                    <small id="mobile-error" class="validation-msg error"></small>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="form-group" id="otp-group" style="display: none;">
+                        <label>One-Time Password</label>
+                        <input type="text" id="otp" class="form-control" placeholder="6-digit code" maxlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label>Account Password</label>
+                        <input type="password" id="password" class="form-control" required placeholder="Create password">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address (Optional)</label>
+                    <input type="email" id="email" class="form-control" placeholder="john@example.com">
+                </div>
+
+                <button type="submit" class="btn" id="register-btn" disabled style="margin-top: 1rem;"><i class="fas fa-rocket"></i> Launch Character</button>
+                <div id="msg" style="margin-top: 1.5rem; font-size: 0.85rem; font-weight: 500; text-align: center;"></div>
+                
+                <div style="margin-top: 2.5rem; text-align: center; font-size: 0.9rem;">
+                    <span style="color: var(--text-secondary);">Already a member?</span> 
+                    <a href="member-login.html" style="color: var(--primary); text-decoration: none; font-weight: 600; margin-left: 0.5rem;">Sign In</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        let isOtpSent = false;
+        const mobileInput = document.getElementById('mobile_number');
+        const mobileError = document.getElementById('mobile-error');
+
+        mobileInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            e.target.value = val.replace(/\D/g, '');
+            
+            if (val.length > 0 && val.length < 10) {
+                mobileError.textContent = 'Enter a valid 10-digit number';
+                mobileInput.classList.add('invalid');
+                mobileInput.classList.remove('valid');
+            } else if (val.length === 10) {
+                mobileError.textContent = '';
+                mobileInput.classList.remove('invalid');
+                mobileInput.classList.add('valid');
+            } else {
+                mobileError.textContent = '';
+                mobileInput.classList.remove('invalid', 'valid');
+            }
+        });
+
+        document.getElementById('send-otp-btn').addEventListener('click', async () => {
+            const mobile_number = document.getElementById('mobile_number').value;
+            const btn = document.getElementById('send-otp-btn');
+            const msg = document.getElementById('msg');
+            
+            if(mobile_number.length !== 10) {
+                msg.style.color = 'var(--danger)';
+                msg.textContent = 'Please enter a valid 10-digit mobile number';
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('http://localhost:5000/api/auth/send-otp', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mobile_number, type: 'register' })
+                });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    msg.style.color = 'var(--secondary)';
+                    msg.textContent = 'OTP sent successfully to ' + mobile_number;
+                    document.getElementById('otp-group').style.display = 'block';
+                    document.getElementById('register-btn').disabled = false;
+                    isOtpSent = true;
+                    btn.innerHTML = '<i class="fas fa-check"></i>';
+                    
+                    if(data.simulatedOtp) {
+                        alert(`[DEMO] Your OTP is: ${data.simulatedOtp}`);
+                        document.getElementById('otp').value = data.simulatedOtp;
+                    }
+                } else {
+                    msg.style.color = 'var(--danger)';
+                    msg.textContent = data.message;
+                    btn.innerHTML = 'Send OTP';
+                    btn.disabled = false;
+                }
+            } catch(e) {
+                msg.style.color = 'var(--danger)';
+                msg.textContent = 'Connection error';
+                btn.innerHTML = 'Send OTP';
+                btn.disabled = false;
+            }
+        });
+
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!isOtpSent) return;
+
+            const btn = document.getElementById('register-btn');
+            const msg = document.getElementById('msg');
+            const mobile_number = document.getElementById('mobile_number').value;
+
+            if (mobile_number.length !== 10) {
+                msg.style.color = 'var(--danger)';
+                msg.textContent = 'Mobile number must be exactly 10 digits';
+                return;
+            }
+            
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Finalizing...';
+            btn.disabled = true;
+
+            const payload = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                mobile_number: mobile_number,
+                password: document.getElementById('password').value,
+                otp: document.getElementById('otp').value
+            };
+
+            try {
+                const res = await fetch('http://localhost:5000/api/auth/member-register', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    msg.style.color = 'var(--secondary)';
+                    msg.textContent = 'Registration successful! Redirecting...';
+                    setTimeout(() => window.location.href = 'member-login.html', 1500);
+                } else {
+                    msg.style.color = 'var(--danger)';
+                    msg.textContent = data.message;
+                    btn.innerHTML = 'Complete Registration';
+                    btn.disabled = false;
+                }
+            } catch(e) {
+                msg.style.color = 'var(--danger)';
+                msg.textContent = 'Connection error';
+                btn.innerHTML = 'Complete Registration';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

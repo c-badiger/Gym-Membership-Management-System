@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payments - GymAdmin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Payments - GymPro Admin</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="app-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <i class="fas fa-dumbbell"></i> GymAdmin
+                <i class="fas fa-dumbbell"></i> GymPro
             </div>
             <ul class="nav-links">
-                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a></li>
                 <li class="nav-item"><a href="members.html" class="nav-link"><i class="fas fa-users"></i> Members</a></li>
                 <li class="nav-item"><a href="plans.html" class="nav-link"><i class="fas fa-tags"></i> Plans</a></li>
                 <li class="nav-item"><a href="payments.html" class="nav-link active"><i class="fas fa-credit-card"></i> Payments</a></li>
-                <li class="nav-item" style="margin-top: 2rem;">
+                <li class="nav-item"><a href="admin-attendance.html" class="nav-link"><i class="fas fa-check-circle"></i> Attendance</a></li>
+                <li class="nav-item"><a href="achievements.html" class="nav-link"><i class="fas fa-trophy"></i> Achievements</a></li>
+                <li class="nav-item" style="margin-top: auto;">
                     <a href="#" class="nav-link" onclick="logout()" style="color: var(--danger);">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
@@ -31,33 +32,36 @@
         <!-- Main Content -->
         <main class="main-content">
             <nav class="top-navbar">
-                <div class="nav-title">Payments & Subscriptions</div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <i class="fas fa-bars mobile-toggle" id="mobile-toggle"></i>
+                    <div class="nav-title">Financials</div>
+                </div>
                 <div class="user-profile">
-                    <span id="user-name" style="font-weight: 600;">Admin</span>
-                    <i class="fas fa-user-circle" style="font-size: 1.5rem; margin-left: 0.5rem; color: var(--primary);"></i>
+                    <span id="user-name" style="font-weight: 500;">Administrator</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--text-secondary);"></i>
                 </div>
             </nav>
 
             <div class="page-content">
-                <div class="page-header">
-                    <h2>Payment History</h2>
-                    <div class="action-btns">
-                        <button class="btn" onclick="openModal()"><i class="fas fa-plus"></i> Record Payment</button>
+                <div class="page-header" style="margin-bottom: 3rem;">
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 700; letter-spacing: -0.5px;">Transaction Ledger</h2>
+                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Audit payments and subscription cycles.</p>
                     </div>
+                    <button class="btn" style="width: auto;" onclick="openModal()"><i class="fas fa-plus"></i> Record Transaction</button>
                 </div>
 
                 <div class="glass table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Txn ID</th>
+                                <th>Transaction</th>
                                 <th>Member</th>
-                                <th>Plan</th>
+                                <th>Subscription Tier</th>
+                                <th>Billing Cycle</th>
                                 <th>Amount</th>
-                                <th>Date</th>
-                                <th>Sub Start</th>
-                                <th>Sub End</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="payments-body">
@@ -71,36 +75,38 @@
 
     <!-- Modal Form -->
     <div class="modal" id="paymentModal">
-        <div class="modal-content">
+        <div class="modal-content glass">
             <div class="modal-header">
-                <h3>Record Payment & Subscription</h3>
+                <h3 style="font-size: 1.5rem; font-weight: 700;">Record Transaction</h3>
                 <span class="close" onclick="closeModal()">&times;</span>
             </div>
-            <form id="payment-form">
+            <form id="payment-form" style="margin-top: 1.5rem;">
                 <div class="form-group">
-                    <label>Member</label>
+                    <label>Select Member</label>
                     <select id="member_id" class="form-control" required>
                         <!-- Populated by JS -->
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Plan</label>
+                    <label>Select Subscription Tier</label>
                     <select id="plan_id" class="form-control" required onchange="updateAmount()">
                         <!-- Populated by JS -->
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Amount ($)</label>
-                    <input type="number" step="0.01" id="amount" class="form-control" required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Net Amount ($)</label>
+                        <input type="number" step="0.01" id="amount" class="form-control" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Status</label>
+                        <select id="status" class="form-control">
+                            <option value="paid">Paid (Cleared)</option>
+                            <option value="pending">Pending (Awaiting)</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Status</label>
-                    <select id="status" class="form-control">
-                        <option value="paid">Paid</option>
-                        <option value="pending">Pending</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn" id="save-btn">Submit Payment</button>
+                <button type="submit" class="btn" id="save-btn" style="margin-top: 1rem;">Commit Transaction</button>
             </form>
         </div>
     </div>
@@ -110,20 +116,41 @@
         checkAuth();
         let plansData = [];
 
+        const toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        };
+
+        document.getElementById('mobile-toggle')?.addEventListener('click', toggleSidebar);
+
         const loadPayments = async () => {
             try {
                 const payments = await fetchAPI('/payments');
                 const tbody = document.getElementById('payments-body');
                 tbody.innerHTML = payments.map(p => `
                     <tr>
-                        <td>#${p.id}</td>
-                        <td style="font-weight: 600;">${p.member_name}</td>
-                        <td>${p.plan_name || 'N/A'}</td>
-                        <td>$${p.amount}</td>
-                        <td>${new Date(p.payment_date).toLocaleString()}</td>
-                        <td>${p.start_date ? new Date(p.start_date).toLocaleDateString() : '-'}</td>
-                        <td>${p.end_date ? new Date(p.end_date).toLocaleDateString() : '-'}</td>
-                        <td><span class="badge badge-${p.status}">${p.status}</span></td>
+                        <td>
+                            <div style="font-weight: 600; font-size: 0.85rem; color: var(--primary);">#TXN-${p.id}</div>
+                            <div style="color: var(--text-secondary); font-size: 0.75rem;">${new Date(p.payment_date).toLocaleDateString()}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;">${p.member_name}</div>
+                        </td>
+                        <td>
+                            <div class="badge" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">${p.plan_name || 'Generic'}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.85rem;">${p.start_date ? new Date(p.start_date).toLocaleDateString() : '-'} to ${p.end_date ? new Date(p.end_date).toLocaleDateString() : '-'}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 1.1rem;">$${p.amount}</div>
+                        </td>
+                        <td><span class="badge badge-${p.status.toLowerCase()}">${p.status}</span></td>
+                        <td>
+                            <a href="invoice.html?id=${p.id}" class="btn" style="width: auto; padding: 0.5rem 1rem; font-size: 0.8rem; background: rgba(99, 102, 241, 0.1); color: var(--primary); text-decoration: none;" target="_blank">
+                                <i class="fas fa-file-invoice-dollar"></i> Invoice
+                            </a>
+                        </td>
                     </tr>
                 `).join('');
             } catch (error) {
@@ -141,13 +168,13 @@
                 plansData = plans;
 
                 const memberSelect = document.getElementById('member_id');
-                memberSelect.innerHTML = '<option value="">Select Member</option>' + members.map(m => `
-                    <option value="${m.id}">${m.name} (${m.email})</option>
+                memberSelect.innerHTML = '<option value="">Search Member...</option>' + members.map(m => `
+                    <option value="${m.id}">${m.name} (${m.mobile_number})</option>
                 `).join('');
 
                 const planSelect = document.getElementById('plan_id');
-                planSelect.innerHTML = '<option value="">Select Plan</option>' + plans.map(p => `
-                    <option value="${p.id}">${p.name} - $${p.price}</option>
+                planSelect.innerHTML = '<option value="">Select Plan...</option>' + plans.map(p => `
+                    <option value="${p.id}">${p.name} - $${p.discount_price}</option>
                 `).join('');
 
             } catch (error) {
@@ -160,7 +187,7 @@
             if(planId) {
                 const plan = plansData.find(p => p.id == planId);
                 if(plan) {
-                    document.getElementById('amount').value = plan.price;
+                    document.getElementById('amount').value = plan.discount_price;
                 }
             } else {
                 document.getElementById('amount').value = '';
@@ -180,7 +207,8 @@
         document.getElementById('payment-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('save-btn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing...';
+            btn.disabled = true;
             
             const payload = {
                 member_id: document.getElementById('member_id').value,
@@ -191,13 +219,14 @@
 
             try {
                 await fetchAPI('/payments', { method: 'POST', body: JSON.stringify(payload) });
-                showNotification('Payment recorded successfully');
+                showNotification('Transaction committed successfully');
                 closeModal();
                 loadPayments();
             } catch (error) {
                 alert(error.message);
             } finally {
-                btn.innerHTML = 'Submit Payment';
+                btn.innerHTML = 'Commit Transaction';
+                btn.disabled = false;
             }
         });
 

@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plans - GymAdmin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Membership Plans - GymPro Admin</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="app-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <i class="fas fa-dumbbell"></i> GymAdmin
+                <i class="fas fa-dumbbell"></i> GymPro
             </div>
             <ul class="nav-links">
-                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a></li>
                 <li class="nav-item"><a href="members.html" class="nav-link"><i class="fas fa-users"></i> Members</a></li>
                 <li class="nav-item"><a href="plans.html" class="nav-link active"><i class="fas fa-tags"></i> Plans</a></li>
                 <li class="nav-item"><a href="payments.html" class="nav-link"><i class="fas fa-credit-card"></i> Payments</a></li>
-                <li class="nav-item" style="margin-top: 2rem;">
+                <li class="nav-item"><a href="admin-attendance.html" class="nav-link"><i class="fas fa-check-circle"></i> Attendance</a></li>
+                <li class="nav-item"><a href="achievements.html" class="nav-link"><i class="fas fa-trophy"></i> Achievements</a></li>
+                <li class="nav-item" style="margin-top: auto;">
                     <a href="#" class="nav-link" onclick="logout()" style="color: var(--danger);">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
@@ -31,19 +32,23 @@
         <!-- Main Content -->
         <main class="main-content">
             <nav class="top-navbar">
-                <div class="nav-title">Membership Plans</div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <i class="fas fa-bars mobile-toggle" id="mobile-toggle"></i>
+                    <div class="nav-title">Subscription Plans</div>
+                </div>
                 <div class="user-profile">
-                    <span id="user-name" style="font-weight: 600;">Admin</span>
-                    <i class="fas fa-user-circle" style="font-size: 1.5rem; margin-left: 0.5rem; color: var(--primary);"></i>
+                    <span id="user-name" style="font-weight: 500;">Administrator</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--text-secondary);"></i>
                 </div>
             </nav>
 
             <div class="page-content">
-                <div class="page-header">
-                    <h2>Available Plans</h2>
-                    <div class="action-btns">
-                        <button class="btn" onclick="openModal()"><i class="fas fa-plus"></i> Add Plan</button>
+                <div class="page-header" style="margin-bottom: 3rem;">
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 700; letter-spacing: -0.5px;">Membership Tiers</h2>
+                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Configure and manage subscription packages.</p>
                     </div>
+                    <button class="btn" style="width: auto;" onclick="openModal()"><i class="fas fa-plus"></i> Create New Plan</button>
                 </div>
 
                 <div class="stats-grid" id="plans-container">
@@ -55,29 +60,35 @@
 
     <!-- Modal Form -->
     <div class="modal" id="planModal">
-        <div class="modal-content">
+        <div class="modal-content glass">
             <div class="modal-header">
-                <h3>Add New Plan</h3>
+                <h3 style="font-size: 1.5rem; font-weight: 700;">Create Subscription Tier</h3>
                 <span class="close" onclick="closeModal()">&times;</span>
             </div>
-            <form id="plan-form">
+            <form id="plan-form" style="margin-top: 1.5rem;">
                 <div class="form-group">
-                    <label>Plan Name</label>
-                    <input type="text" id="name" class="form-control" required>
+                    <label>Plan Label</label>
+                    <input type="text" id="name" class="form-control" required placeholder="e.g. Pro Monthly">
                 </div>
                 <div class="form-group">
-                    <label>Description</label>
-                    <input type="text" id="description" class="form-control" required>
+                    <label>Included Features (comma separated)</label>
+                    <input type="text" id="description" class="form-control" required placeholder="Yoga, Spa, Personal Trainer">
                 </div>
                 <div class="form-group">
-                    <label>Duration (Months)</label>
-                    <input type="number" id="duration_months" class="form-control" min="1" required>
+                    <label>Contract Duration (Months)</label>
+                    <input type="number" id="duration_months" class="form-control" min="1" required placeholder="1">
                 </div>
-                <div class="form-group">
-                    <label>Price ($)</label>
-                    <input type="number" step="0.01" id="price" class="form-control" required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Base Price ($)</label>
+                        <input type="number" step="0.01" id="price" class="form-control" required placeholder="29.99">
+                    </div>
+                    <div class="form-group">
+                        <label>Special Price ($)</label>
+                        <input type="number" step="0.01" id="discount_price" class="form-control" required placeholder="19.99">
+                    </div>
                 </div>
-                <button type="submit" class="btn" id="save-btn">Save Plan</button>
+                <button type="submit" class="btn" id="save-btn" style="margin-top: 1rem;">Publish Subscription Tier</button>
             </form>
         </div>
     </div>
@@ -86,18 +97,41 @@
     <script>
         checkAuth();
 
+        const toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        };
+
+        document.getElementById('mobile-toggle')?.addEventListener('click', toggleSidebar);
+
         const loadPlans = async () => {
             try {
                 const plans = await fetchAPI('/plans');
                 const container = document.getElementById('plans-container');
-                container.innerHTML = plans.map(p => `
-                    <div class="stat-card glass" style="flex-direction: column; align-items: flex-start; padding: 2rem;">
-                        <h2 style="color: var(--primary); margin-bottom: 0.5rem;">${p.name}</h2>
-                        <h3 style="font-size: 2rem; margin-bottom: 1rem;">$${p.price} <span style="font-size: 0.9rem; color: var(--text-secondary); font-weight: normal;">/ ${p.duration_months} mo</span></h3>
-                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; flex-grow: 1;">${p.description}</p>
-                        <button class="btn btn-danger" onclick="deletePlan(${p.id})"><i class="fas fa-trash"></i> Delete Plan</button>
+                container.innerHTML = plans.map(p => {
+                    const features = p.description.split(',').map(f => `
+                        <li><i class="fas fa-check-circle" style="color: var(--secondary);"></i> ${f.trim()}</li>
+                    `).join('');
+                    const isPopular = p.duration_months >= 6 ? '<div class="tag-popular">BEST VALUE 🔥</div>' : '';
+
+                    return `
+                    <div class="glass plan-card gamified-card-hover" style="align-items: flex-start; text-align: left; padding: 2.5rem;">
+                        ${isPopular}
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h2 style="font-size: 1.8rem; font-weight: 700; color: var(--text-primary);">${p.name}</h2>
+                            <span class="badge badge-active">${p.duration_months} Months</span>
+                        </div>
+                        <div class="plan-price" style="margin: 0.5rem 0 1.5rem 0; text-align: left;">
+                            <span class="old">$${p.price}</span>
+                            <span class="new">$${p.discount_price}</span>
+                            <span style="color: var(--text-secondary); font-size: 0.9rem;">total package price</span>
+                        </div>
+                        <ul class="plan-features" style="margin-bottom: 2.5rem; flex-grow: 1;">
+                            ${features}
+                        </ul>
+                        <button class="btn btn-danger" style="width: 100%;" onclick="deletePlan(${p.id})"><i class="fas fa-trash-alt"></i> Discontinue Plan</button>
                     </div>
-                `).join('');
+                `}).join('');
             } catch (error) {
                 console.error(error);
             }
@@ -115,32 +149,35 @@
         document.getElementById('plan-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('save-btn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Publishing...';
+            btn.disabled = true;
             
             const payload = {
                 name: document.getElementById('name').value,
                 description: document.getElementById('description').value,
                 duration_months: document.getElementById('duration_months').value,
-                price: document.getElementById('price').value
+                price: document.getElementById('price').value,
+                discount_price: document.getElementById('discount_price').value
             };
 
             try {
                 await fetchAPI('/plans', { method: 'POST', body: JSON.stringify(payload) });
-                showNotification('Plan added');
+                showNotification('Subscription plan published successfully');
                 closeModal();
                 loadPlans();
             } catch (error) {
                 alert(error.message);
             } finally {
-                btn.innerHTML = 'Save Plan';
+                btn.innerHTML = 'Publish Subscription Tier';
+                btn.disabled = false;
             }
         });
 
         const deletePlan = async (id) => {
-            if (confirm('Are you sure you want to delete this plan?')) {
+            if (confirm('Are you sure you want to discontinue this membership tier? Existing subscriptions will remain active until expiry.')) {
                 try {
                     await fetchAPI(`/plans/${id}`, { method: 'DELETE' });
-                    showNotification('Plan deleted');
+                    showNotification('Subscription plan discontinued');
                     loadPlans();
                 } catch (error) {
                     alert(error.message);

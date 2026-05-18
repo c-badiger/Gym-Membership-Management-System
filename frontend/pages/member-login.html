@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Login - GymPro</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body> 
+    <div class="auth-container">
+        <div class="auth-card glass">
+            <h2>Level Up <span style="font-size: 1rem; vertical-align: middle; opacity: 0.7; font-weight: 500; color: var(--secondary);">Player 1</span></h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Ready to crush your goals? Sign in to continue your journey.</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Mobile Number or Name</label>
+                    <input type="text" id="login" class="form-control" required placeholder="Phone number or full name">
+                    <small id="mobile-error" class="validation-msg error"></small>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-control" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn" id="login-btn"><i class="fas fa-gamepad"></i> Enter Arena</button>
+                <div id="error-msg" style="color: var(--danger); margin-top: 1rem; font-size: 0.85rem; font-weight: 500;"></div>
+                
+                <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 0.8rem; font-size: 0.9rem;">
+                    <a href="member-register.html" style="color: var(--text-primary); text-decoration: none; font-weight: 600;">New User? <span style="color: var(--primary);">Create Account</span></a>
+                    <a href="forgot-password.html" style="color: var(--text-secondary); text-decoration: none;">Forgot Password?</a>
+                    <div style="display: flex; align-items: center; gap: 1rem; margin: 1rem 0;">
+                        <hr style="flex: 1; border: 0; border-top: 1px solid var(--border);">
+                        <span style="color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">or</span>
+                        <hr style="flex: 1; border: 0; border-top: 1px solid var(--border);">
+                    </div>
+                    <a href="login.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">Login as Administrator</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        // Validation removed to allow username input
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('login-btn');
+            const errorMsg = document.getElementById('error-msg');
+            const login = document.getElementById('login').value;
+            const password = document.getElementById('password').value;
+
+            if (!login) {
+                errorMsg.textContent = 'Please enter your login details';
+                return;
+            }
+            
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Signing in...';
+            btn.disabled = true;
+            errorMsg.textContent = '';
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/member-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ login, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('gym_token', data.token);
+                    localStorage.setItem('gym_user', JSON.stringify(data.user));
+                    window.location.href = 'member-dashboard.html';
+                } else {
+                    errorMsg.textContent = data.message;
+                    btn.innerHTML = 'Sign In';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                errorMsg.textContent = 'Server connection failed.';
+                btn.innerHTML = 'Sign In';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

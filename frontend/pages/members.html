@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Members - GymAdmin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Members - GymPro Admin</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="app-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <i class="fas fa-dumbbell"></i> GymAdmin
+                <i class="fas fa-dumbbell"></i> GymPro
             </div>
             <ul class="nav-links">
-                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a></li>
                 <li class="nav-item"><a href="members.html" class="nav-link active"><i class="fas fa-users"></i> Members</a></li>
                 <li class="nav-item"><a href="plans.html" class="nav-link"><i class="fas fa-tags"></i> Plans</a></li>
                 <li class="nav-item"><a href="payments.html" class="nav-link"><i class="fas fa-credit-card"></i> Payments</a></li>
-                <li class="nav-item" style="margin-top: 2rem;">
+                <li class="nav-item"><a href="admin-attendance.html" class="nav-link"><i class="fas fa-check-circle"></i> Attendance</a></li>
+                <li class="nav-item"><a href="achievements.html" class="nav-link"><i class="fas fa-trophy"></i> Achievements</a></li>
+                <li class="nav-item" style="margin-top: auto;">
                     <a href="#" class="nav-link" onclick="logout()" style="color: var(--danger);">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
@@ -31,75 +32,154 @@
         <!-- Main Content -->
         <main class="main-content">
             <nav class="top-navbar">
-                <div class="nav-title">Member Management</div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <i class="fas fa-bars mobile-toggle" id="mobile-toggle"></i>
+                    <div class="nav-title">Members</div>
+                </div>
                 <div class="user-profile">
-                    <span id="user-name" style="font-weight: 600;">Admin</span>
-                    <i class="fas fa-user-circle" style="font-size: 1.5rem; margin-left: 0.5rem; color: var(--primary);"></i>
+                    <span id="user-name" style="font-weight: 500;">Administrator</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--text-secondary);"></i>
                 </div>
             </nav>
 
             <div class="page-content">
-                <div class="page-header">
-                    <h2>Members List</h2>
-                    <div class="action-btns">
-                        <button class="btn" onclick="openModal()"><i class="fas fa-plus"></i> Add Member</button>
+                <div class="page-header" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 700; letter-spacing: -0.5px;">Member Management</h2>
+                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">View and manage your gym members.</p>
                     </div>
+                    <button class="btn" style="width: auto; padding: 0.8rem 1.5rem; display: none;" onclick="document.getElementById('member-form-panel').scrollIntoView({behavior: 'smooth'})" id="mobile-add-btn"><i class="fas fa-plus"></i> Add Member</button>
+                    <style>
+                        @media(max-width: 1024px) { #mobile-add-btn { display: inline-flex !important; } }
+                    </style>
                 </div>
 
-                <div class="glass table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Join Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="members-body">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
+                <div class="members-layout">
+                    <!-- LEFT SIDE: Members List -->
+                    <div class="members-list-col">
+                        <!-- Filters -->
+                        <div class="card" style="padding: 1.5rem; margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+                            <div style="flex: 2; min-width: 200px;">
+                                <label style="color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.5rem;">Search Directory</label>
+                                <input type="text" id="search-member" class="form-control" placeholder="Search by name or mobile...">
+                            </div>
+                            <div style="flex: 1; min-width: 140px;">
+                                <label style="color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.5rem;">Payment</label>
+                                <select id="filter-payment" class="form-control">
+                                    <option value="">All</option>
+                                    <option value="PAID">Paid</option>
+                                    <option value="UNPAID">Unpaid</option>
+                                </select>
+                            </div>
+                            <div style="flex: 1; min-width: 140px;">
+                                <label style="color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.5rem;">Status</label>
+                                <select id="filter-status" class="form-control">
+                                    <option value="">All</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-secondary" style="width: auto; height: 50px;" onclick="loadMembers()">Filter</button>
+                        </div>
+
+                        <div class="card table-container" style="overflow-x: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Member</th>
+                                        <th>Contact Info</th>
+                                        <th>Join Date</th>
+                                        <th>Status</th>
+                                        <th>Payment</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="members-body">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT SIDE: Sticky Form Panel -->
+                    <div class="members-form-col">
+                        <div class="card sticky-panel" id="member-form-panel">
+                            <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                                <h3 id="modal-title" style="font-size: 1.2rem; font-weight: 700;">Add New Member</h3>
+                                <button class="btn btn-secondary" onclick="openModal()" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; width: auto; height: auto;">Clear Form</button>
+                            </div>
+                            <form id="member-form">
+                                <input type="hidden" id="member-id">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="name" class="form-control" required placeholder="John Doe">
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="text" id="phone" class="form-control" required maxlength="15" placeholder="Phone Number">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email (Optional)</label>
+                                    <input type="email" id="email" class="form-control" placeholder="john@example.com">
+                                </div>
+                                <div class="form-group" id="pwd-group">
+                                    <label>Account Password</label>
+                                    <input type="password" id="password" class="form-control" placeholder="Default: member123">
+                                </div>
+                                <div class="form-group">
+                                    <label>Plan</label>
+                                    <input type="text" id="plan" class="form-control" placeholder="Membership Plan">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="form-group">
+                                        <label>Join Date</label>
+                                        <input type="date" id="join_date" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Initial Status</label>
+                                        <select id="status" class="form-control">
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn" id="save-btn" style="margin-top: 1rem; width: 100%;">Save Member Profile</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Modal Form -->
-    <div class="modal" id="memberModal">
-        <div class="modal-content">
+    <!-- Assign Features Modal -->
+    <div class="modal" id="assignModal">
+        <div class="modal-content glass">
             <div class="modal-header">
-                <h3 id="modal-title">Add Member</h3>
-                <span class="close" onclick="closeModal()">&times;</span>
+                <h3 style="font-size: 1.5rem; font-weight: 700;">Assign Features</h3>
+                <span class="close" onclick="closeAssignModal()">&times;</span>
             </div>
-            <form id="member-form">
-                <input type="hidden" id="member-id">
+            <form id="assign-form" style="margin-top: 1.5rem;">
+                <input type="hidden" id="assign-member-id">
                 <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="name" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="email" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Phone</label>
-                    <input type="text" id="phone" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Join Date</label>
-                    <input type="date" id="join_date" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Status</label>
-                    <select id="status" class="form-control">
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+                    <label>Assign Trainer</label>
+                    <select id="trainer-select" class="form-control">
+                        <option value="">No Personal Trainer</option>
                     </select>
                 </div>
-                <button type="submit" class="btn" id="save-btn">Save Member</button>
+                <div class="form-group">
+                    <label>Select Workout Routine</label>
+                    <select id="workout-select" class="form-control">
+                        <option value="">No Active Routine</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Select Diet Plan</label>
+                    <select id="diet-select" class="form-control">
+                        <option value="">No Active Diet Plan</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" id="assign-btn" style="margin-top: 1rem;">Update Assignments</button>
             </form>
         </div>
     </div>
@@ -109,20 +189,50 @@
         checkAuth();
         let isEdit = false;
 
+        const toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        };
+
+        document.getElementById('mobile-toggle')?.addEventListener('click', toggleSidebar);
+
         const loadMembers = async () => {
             try {
-                const members = await fetchAPI('/members');
+                const search = document.getElementById('search-member').value;
+                const payment = document.getElementById('filter-payment').value;
+                const status = document.getElementById('filter-status').value;
+                
+                let query = '?';
+                if(search) query += `search=${encodeURIComponent(search)}&`;
+                if(payment) query += `payment_status=${payment}&`;
+                if(status) query += `status=${status}&`;
+
+                const members = await fetchAPI(`/members${query}`);
                 const tbody = document.getElementById('members-body');
                 tbody.innerHTML = members.map(m => `
                     <tr>
-                        <td>${m.name}</td>
-                        <td>${m.email}</td>
-                        <td>${m.phone || 'N/A'}</td>
-                        <td>${new Date(m.join_date).toLocaleDateString()}</td>
-                        <td><span class="badge badge-${m.status}">${m.status}</span></td>
                         <td>
-                            <button class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick='editMember(${JSON.stringify(m).replace(/'/g, "\\'")})'><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="deleteMember(${m.id})"><i class="fas fa-trash"></i></button>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="avatar-circle">
+                                    ${m.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                </div>
+                                <div style="font-weight: 600;">${m.name}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.9rem;">${m.phone}</div>
+                            <div style="color: var(--text-secondary); font-size: 0.8rem;">${m.email || 'No email'}</div>
+                            <div style="color: var(--primary); font-size: 0.8rem; margin-top: 0.2rem;"><i class="fas fa-tag"></i> ${m.plan || 'No Plan'}</div>
+                        </td>
+                        <td style="color: var(--text-secondary); font-size: 0.9rem;">${new Date(m.join_date).toLocaleDateString()}</td>
+                        <td><span class="badge badge-${m.status}">${m.status}</span></td>
+                        <td><span class="badge badge-${m.payment_status.toLowerCase()}">${m.payment_status}</span></td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn" style="width: 36px; height: 36px; padding: 0; background: rgba(16, 185, 129, 0.1); color: var(--secondary);" onclick="openAssignModal(${m.id})" title="Assign Features"><i class="fas fa-tasks"></i></button>
+                                <button class="btn" style="width: 36px; height: 36px; padding: 0; background: rgba(99, 102, 241, 0.1); color: var(--primary);" onclick='editMember(${JSON.stringify(m).replace(/'/g, "\\'")})' title="Edit Member"><i class="fas fa-edit"></i></button>
+                                <button class="btn" style="width: 36px; height: 36px; padding: 0; background: rgba(239, 68, 68, 0.1); color: var(--danger);" onclick="deleteMember(${m.id})" title="Delete Member"><i class="fas fa-trash"></i></button>
+                            </div>
                         </td>
                     </tr>
                 `).join('');
@@ -135,63 +245,83 @@
             isEdit = false;
             document.getElementById('member-form').reset();
             document.getElementById('member-id').value = '';
-            document.getElementById('modal-title').textContent = 'Add Member';
+            document.getElementById('modal-title').textContent = 'Add New Member';
+            document.getElementById('pwd-group').style.display = 'block';
             document.getElementById('join_date').valueAsDate = new Date();
-            document.getElementById('memberModal').classList.add('show');
+            if(window.innerWidth <= 1024) {
+                document.getElementById('member-form-panel').scrollIntoView({behavior: 'smooth'});
+            }
         };
 
         const closeModal = () => {
-            document.getElementById('memberModal').classList.remove('show');
+            // Deprecated: form is inline now
         };
 
         const editMember = (member) => {
             isEdit = true;
-            document.getElementById('modal-title').textContent = 'Edit Member';
+            document.getElementById('modal-title').textContent = 'Edit Member Profile';
             document.getElementById('member-id').value = member.id;
             document.getElementById('name').value = member.name;
-            document.getElementById('email').value = member.email;
+            document.getElementById('email').value = member.email || '';
             document.getElementById('phone').value = member.phone;
+            document.getElementById('plan').value = member.plan || '';
             document.getElementById('join_date').value = member.join_date.split('T')[0];
             document.getElementById('status').value = member.status;
-            document.getElementById('memberModal').classList.add('show');
+            document.getElementById('pwd-group').style.display = 'none';
+            document.getElementById('member-form-panel').scrollIntoView({behavior: 'smooth'});
         };
 
         document.getElementById('member-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('save-btn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            const phone = document.getElementById('phone').value;
+
+            if (!phone) {
+                alert('Phone number is required');
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing...';
+            btn.disabled = true;
             
             const payload = {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
+                phone: phone,
+                plan: document.getElementById('plan').value,
                 join_date: document.getElementById('join_date').value,
                 status: document.getElementById('status').value
             };
+
+            if (!isEdit) {
+                payload.password = document.getElementById('password').value || 'member123';
+            }
+
             const id = document.getElementById('member-id').value;
 
             try {
                 if (isEdit) {
                     await fetchAPI(`/members/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
-                    showNotification('Member updated');
+                    showNotification('Profile updated successfully');
                 } else {
                     await fetchAPI('/members', { method: 'POST', body: JSON.stringify(payload) });
-                    showNotification('Member added');
+                    showNotification('New member added successfully');
                 }
-                closeModal();
+                openModal();
                 loadMembers();
             } catch (error) {
                 alert(error.message);
             } finally {
-                btn.innerHTML = 'Save Member';
+                btn.innerHTML = 'Save Member Profile';
+                btn.disabled = false;
             }
         });
 
         const deleteMember = async (id) => {
-            if (confirm('Are you sure you want to delete this member?')) {
+            if (confirm('Are you sure you want to delete this member? This action is irreversible.')) {
                 try {
                     await fetchAPI(`/members/${id}`, { method: 'DELETE' });
-                    showNotification('Member deleted');
+                    showNotification('Member removed from directory');
                     loadMembers();
                 } catch (error) {
                     alert(error.message);
@@ -199,6 +329,60 @@
             }
         };
 
+        const loadFeatures = async () => {
+            try {
+                const [trainers, workouts, diets] = await Promise.all([
+                    fetchAPI('/features/trainers'),
+                    fetchAPI('/features/workout-plans'),
+                    fetchAPI('/features/diet-plans')
+                ]);
+                const tSelect = document.getElementById('trainer-select');
+                const wSelect = document.getElementById('workout-select');
+                const dSelect = document.getElementById('diet-select');
+                
+                tSelect.innerHTML += trainers.map(t => `<option value="${t.id}">${t.name} — ${t.specialization}</option>`).join('');
+                wSelect.innerHTML += workouts.map(w => `<option value="${w.id}">${w.title}</option>`).join('');
+                dSelect.innerHTML += diets.map(d => `<option value="${d.id}">${d.title}</option>`).join('');
+            } catch (error) {
+                console.error("Error loading features", error);
+            }
+        };
+
+        const openAssignModal = (id) => {
+            document.getElementById('assign-form').reset();
+            document.getElementById('assign-member-id').value = id;
+            document.getElementById('assignModal').classList.add('show');
+        };
+
+        const closeAssignModal = () => {
+            document.getElementById('assignModal').classList.remove('show');
+        };
+
+        document.getElementById('assign-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('assign-btn');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Updating...';
+            btn.disabled = true;
+            const id = document.getElementById('assign-member-id').value;
+            const payload = {
+                trainer_id: document.getElementById('trainer-select').value || null,
+                workout_plan_id: document.getElementById('workout-select').value || null,
+                diet_plan_id: document.getElementById('diet-select').value || null
+            };
+            try {
+                await fetchAPI(`/members/${id}/assign`, { method: 'POST', body: JSON.stringify(payload) });
+                showNotification('Features assigned successfully');
+                closeAssignModal();
+                loadMembers();
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                btn.innerHTML = 'Update Assignments';
+                btn.disabled = false;
+            }
+        });
+
+        loadFeatures();
         loadMembers();
     </script>
 </body>

@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - GymAdmin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Dashboard - GymPro Admin</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,16 +11,18 @@
 <body>
     <div class="app-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <i class="fas fa-dumbbell"></i> GymAdmin
+                <i class="fas fa-dumbbell"></i> GymPro
             </div>
             <ul class="nav-links">
-                <li class="nav-item"><a href="dashboard.html" class="nav-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="dashboard.html" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
                 <li class="nav-item"><a href="members.html" class="nav-link"><i class="fas fa-users"></i> Members</a></li>
                 <li class="nav-item"><a href="plans.html" class="nav-link"><i class="fas fa-tags"></i> Plans</a></li>
                 <li class="nav-item"><a href="payments.html" class="nav-link"><i class="fas fa-credit-card"></i> Payments</a></li>
-                <li class="nav-item" style="margin-top: 2rem;">
+                <li class="nav-item"><a href="admin-attendance.html" class="nav-link"><i class="fas fa-check-circle"></i> Attendance</a></li>
+                <li class="nav-item"><a href="achievements.html" class="nav-link"><i class="fas fa-trophy"></i> Achievements</a></li>
+                <li class="nav-item" style="margin-top: auto;">
                     <a href="#" class="nav-link" onclick="logout()" style="color: var(--danger);">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
@@ -32,78 +33,84 @@
         <!-- Main Content -->
         <main class="main-content">
             <nav class="top-navbar">
-                <div class="nav-title">Overview</div>
-                <div class="user-profile">
-                    <span id="user-name" style="font-weight: 600;">Admin</span>
-                    <i class="fas fa-user-circle" style="font-size: 1.5rem; margin-left: 0.5rem; color: var(--primary);"></i>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <i class="fas fa-bars mobile-toggle" id="mobile-toggle"></i>
+                    <div class="nav-title">Analytics</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 2rem;">
+                    <div style="display: flex; flex-direction: column; width: 180px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Level 5 <i class="fas fa-star" style="color: var(--accent);"></i></span>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--secondary);">1200 / 2000 XP</span>
+                        </div>
+                        <div class="xp-bar-container">
+                            <div class="xp-bar-fill" style="width: 60%;"></div>
+                        </div>
+                    </div>
+                    <div class="user-profile">
+                        <span id="user-name" style="font-weight: 500;">Administrator</span>
+                        <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--text-secondary);"></i>
+                    </div>
                 </div>
             </nav>
 
             <div class="page-content">
                 <!-- Stats Cards -->
                 <div class="stats-grid" id="stats-container">
-                    <div class="stat-card glass">
+                    <div class="stat-card glass gamified-card-hover">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--primary);"><i class="fas fa-users"></i></div>
+                        </div>
                         <div class="stat-info">
                             <h3>Total Members</h3>
-                            <p id="total-members">...</p>
-                        </div>
-                        <div class="stat-icon" style="background: rgba(99, 102, 241, 0.2); color: var(--primary);">
-                            <i class="fas fa-users"></i>
+                            <p id="total-members">0</p>
                         </div>
                     </div>
-                    <div class="stat-card glass">
+                    <div class="stat-card glass gamified-card-hover">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--secondary);"><i class="fas fa-user-check"></i></div>
+                        </div>
                         <div class="stat-info">
                             <h3>Active Subs</h3>
-                            <p id="active-subs">...</p>
-                        </div>
-                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.2); color: var(--secondary);">
-                            <i class="fas fa-check-circle"></i>
+                            <p id="active-subs">0</p>
                         </div>
                     </div>
-                    <div class="stat-card glass">
-                        <div class="stat-info">
-                            <h3>Total Revenue</h3>
-                            <p id="total-revenue">...</p>
+                    <div class="stat-card glass gamified-card-hover">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: rgba(249, 115, 22, 0.1); color: var(--accent);"><i class="fas fa-coins"></i></div>
                         </div>
-                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">
-                            <i class="fas fa-dollar-sign"></i>
+                        <div class="stat-info">
+                            <h3>Revenue</h3>
+                            <p id="total-revenue">$0</p>
                         </div>
                     </div>
-                    <div class="stat-card glass">
-                        <div class="stat-info">
-                            <h3>Pending Payments</h3>
-                            <p id="pending-payments">...</p>
+                    <div class="stat-card glass gamified-card-hover">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;"><i class="fas fa-calendar-check"></i></div>
                         </div>
-                        <div class="stat-icon" style="background: rgba(239, 68, 68, 0.2); color: var(--danger);">
-                            <i class="fas fa-clock"></i>
+                        <div class="stat-info">
+                            <h3>Present Today</h3>
+                            <p id="present-today">0</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Charts -->
-                <div class="charts-grid">
-                    <div class="chart-container glass">
+                <div class="charts-grid" style="margin-bottom: 2rem;">
+                    <div class="chart-container glass" style="height: 400px;">
                         <canvas id="revenueChart"></canvas>
                     </div>
-                    <div class="chart-container glass">
-                        <canvas id="membersChart"></canvas>
+                    <div class="chart-container glass" style="height: 400px;">
+                        <canvas id="attendanceChart"></canvas>
                     </div>
                 </div>
-
-                <!-- Recent Activity -->
-                <div class="glass table-container">
-                    <h3 style="margin-bottom: 1rem; color: var(--text-secondary);">Recent Members</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Join Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recent-members-body">
-                            <!-- Rows -->
-                        </tbody>
-                    </table>
+                <div class="charts-grid">
+                    <div class="chart-container glass" style="height: 400px;">
+                        <canvas id="membersChart"></canvas>
+                    </div>
+                    <div class="chart-container glass" style="height: 400px;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
                 </div>
             </div>
         </main>
@@ -113,58 +120,107 @@
     <script>
         checkAuth();
 
-        // Load Dashboard Data
+        const toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        };
+
+        document.getElementById('mobile-toggle')?.addEventListener('click', toggleSidebar);
+
         const loadDashboard = async () => {
             try {
                 const data = await fetchAPI('/dashboard/stats');
                 
-                // Update Cards
                 document.getElementById('total-members').textContent = data.cards.totalMembers;
                 document.getElementById('active-subs').textContent = data.cards.activeSubscriptions;
                 document.getElementById('total-revenue').textContent = '$' + data.cards.totalRevenue;
-                document.getElementById('pending-payments').textContent = data.cards.pendingPayments;
+                document.getElementById('present-today').textContent = data.cards.presentToday;
 
-                // Render Revenue Chart
-                const ctxRev = document.getElementById('revenueChart').getContext('2d');
-                new Chart(ctxRev, {
+                const chartOptions = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, color: '#f8fafc', font: { size: 16, weight: '600', family: "'Poppins', sans-serif" } }
+                    },
+                    scales: {
+                        y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8', font: { family: "'Poppins'" } } },
+                        x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { family: "'Poppins'" } } }
+                    }
+                };
+
+                // Revenue Chart
+                new Chart(document.getElementById('revenueChart').getContext('2d'), {
                     type: 'line',
                     data: {
                         labels: data.charts.monthlyRevenue.map(d => d.month),
                         datasets: [{
-                            label: 'Monthly Revenue ($)',
                             data: data.charts.monthlyRevenue.map(d => d.revenue),
-                            borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#3b82f6',
                             tension: 0.4,
-                            fill: true
+                            fill: true,
+                            backgroundColor: (context) => {
+                                const ctx = context.chart.ctx;
+                                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                                gradient.addColorStop(0, 'rgba(59, 130, 246, 0.2)');
+                                gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+                                return gradient;
+                            }
                         }]
                     },
-                    options: { maintainAspectRatio: false, plugins: { title: { display: true, text: 'Revenue Trend', color: '#fff' } }, scales: { y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8'} }, x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8'} } } }
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { ...chartOptions.plugins.title, text: 'Revenue Growth' } } }
                 });
 
-                // Render Members Chart
-                const ctxMem = document.getElementById('membersChart').getContext('2d');
-                new Chart(ctxMem, {
+                // Attendance Chart
+                new Chart(document.getElementById('attendanceChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.charts.monthlyAttendance.map(d => d.month),
+                        datasets: [{
+                            data: data.charts.monthlyAttendance.map(d => d.count),
+                            backgroundColor: '#22c55e',
+                            borderRadius: 8
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { ...chartOptions.plugins.title, text: 'Monthly Attendance' } } }
+                });
+
+                // New Members Chart
+                new Chart(document.getElementById('membersChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.charts.monthlyMembers.map(d => d.month),
+                        datasets: [{
+                            data: data.charts.monthlyMembers.map(d => d.count),
+                            backgroundColor: '#a855f7',
+                            borderRadius: 8
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { ...chartOptions.plugins.title, text: 'New Signups' } } }
+                });
+
+                // Status Chart
+                new Chart(document.getElementById('statusChart').getContext('2d'), {
                     type: 'doughnut',
                     data: {
-                        labels: ['Active', 'Inactive'],
+                        labels: ['Active', 'Expired'],
                         datasets: [{
                             data: [data.charts.memberStatus.active, data.charts.memberStatus.inactive],
-                            backgroundColor: ['#6366f1', '#ef4444'],
-                            borderWidth: 0
+                            backgroundColor: ['#22c55e', '#ef4444'],
+                            borderWidth: 0,
+                            hoverOffset: 10
                         }]
                     },
-                    options: { maintainAspectRatio: false, plugins: { title: { display: true, text: 'Member Status', color: '#fff' } } }
+                    options: { 
+                        maintainAspectRatio: false, 
+                        plugins: { 
+                            legend: { display: true, position: 'bottom', labels: { color: '#94a3b8', font: { family: "'Poppins'" }, usePointStyle: true, padding: 20 } },
+                            title: { display: true, text: 'Member Status Distribution', color: '#f8fafc', font: { size: 16 } }
+                        }
+                    }
                 });
-
-                // Recent Members Table
-                const tbody = document.getElementById('recent-members-body');
-                tbody.innerHTML = data.recentMembers.map(m => `
-                    <tr>
-                        <td>${m.name}</td>
-                        <td>${new Date(m.join_date).toLocaleDateString()}</td>
-                    </tr>
-                `).join('');
 
             } catch (error) {
                 console.error(error);

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Signup - GymPro</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card glass">
+            <h2>Become a <span style="color: var(--primary);">Game Master</span></h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2.5rem;">Create your admin character to build the ultimate fitness arena.</p>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label>Administrative Username</label>
+                    <input type="text" id="username" class="form-control" required placeholder="Choose a unique username">
+                </div>
+                <div class="form-group">
+                    <label>Secure Password</label>
+                    <input type="password" id="password" class="form-control" required placeholder="Create a strong password">
+                </div>
+                <button type="submit" class="btn" id="signup-btn"><i class="fas fa-magic"></i> Create Character</button>
+                <div id="msg" style="margin-top: 1.5rem; font-size: 0.85rem; font-weight: 500; text-align: center;"></div>
+                
+                <div style="margin-top: 2.5rem; text-align: center; font-size: 0.9rem;">
+                    <span style="color: var(--text-secondary);">Already have an account?</span>
+                    <a href="login.html" style="color: var(--primary); text-decoration: none; font-weight: 600; margin-left: 0.5rem;">Sign In</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('signup-btn');
+            const msg = document.getElementById('msg');
+            
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Registering...';
+            btn.disabled = true;
+            msg.textContent = '';
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, role: 'admin' })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    msg.style.color = 'var(--secondary)';
+                    msg.textContent = 'Account created successfully! Redirecting to login...';
+                    setTimeout(() => window.location.href = 'login.html', 1500);
+                } else {
+                    msg.style.color = 'var(--danger)';
+                    msg.textContent = data.message;
+                    btn.innerHTML = 'Create Admin Account';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                msg.style.color = 'var(--danger)';
+                msg.textContent = 'Network authentication failed.';
+                btn.innerHTML = 'Create Admin Account';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

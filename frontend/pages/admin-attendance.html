@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance - GymPro Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-dumbbell"></i> GymPro
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="members.html" class="nav-link"><i class="fas fa-users"></i> Members</a></li>
+                <li class="nav-item"><a href="plans.html" class="nav-link"><i class="fas fa-tags"></i> Plans</a></li>
+                <li class="nav-item"><a href="payments.html" class="nav-link"><i class="fas fa-credit-card"></i> Payments</a></li>
+                <li class="nav-item"><a href="admin-attendance.html" class="nav-link active"><i class="fas fa-check-circle"></i> Attendance</a></li>
+                <li class="nav-item"><a href="achievements.html" class="nav-link"><i class="fas fa-trophy"></i> Achievements</a></li>
+                <li class="nav-item" style="margin-top: auto;">
+                    <a href="#" class="nav-link" onclick="logout()" style="color: var(--danger);">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <nav class="top-navbar">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <i class="fas fa-bars mobile-toggle" id="mobile-toggle"></i>
+                    <div class="nav-title">Attendance Logs</div>
+                </div>
+                <div class="user-profile">
+                    <span id="user-name" style="font-weight: 500;">Administrator</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--text-secondary);"></i>
+                </div>
+            </nav>
+
+            <div class="page-content">
+                <div class="page-header" style="margin-bottom: 3rem;">
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 700; letter-spacing: -0.5px;">Check-in History</h2>
+                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Track member presence and facility usage.</p>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="glass" style="padding: 2rem; margin-bottom: 2rem; display: flex; gap: 1.5rem; align-items: flex-end; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.8rem;">Filter by Date</label>
+                        <input type="date" id="filter-date" class="form-control" onchange="loadAttendance()">
+                    </div>
+                    <div style="flex: 2; min-width: 250px;">
+                        <label style="color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.8rem;">Search Member Name</label>
+                        <input type="text" id="filter-member" class="form-control" placeholder="Type member name..." oninput="renderTable()">
+                    </div>
+                    <button class="btn btn-secondary" style="width: auto; height: 50px;" onclick="clearFilters()">Clear Filters</button>
+                </div>
+
+                <div class="glass table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Member Profile</th>
+                                <th>Current Status</th>
+                                <th>Mark Attendance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        checkAuth();
+        let allAttendance = [];
+
+        const toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        };
+
+        document.getElementById('mobile-toggle')?.addEventListener('click', toggleSidebar);
+
+        const loadAttendance = async () => {
+            try {
+                const dateFilter = document.getElementById('filter-date').value || new Date().toISOString().split('T')[0];
+                document.getElementById('filter-date').value = dateFilter;
+                allAttendance = await fetchAPI(`/attendance?date=${dateFilter}`);
+                renderTable();
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        const renderTable = () => {
+            const memberFilter = document.getElementById('filter-member').value.toLowerCase();
+            const tbody = document.getElementById('attendance-body');
+            
+            const filtered = allAttendance.filter(a => {
+                return memberFilter ? a.name.toLowerCase().includes(memberFilter) : true;
+            });
+
+            tbody.innerHTML = filtered.map(a => `
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(99, 102, 241, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">
+                                ${a.name[0].toUpperCase()}
+                            </div>
+                            <div style="font-weight: 500;">${a.name}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge ${a.status === 'Present' ? 'badge-paid' : 'badge-danger'}" style="background: ${a.status === 'Present' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; color: ${a.status === 'Present' ? 'var(--secondary)' : 'var(--danger)'}; border: 1px solid ${a.status === 'Present' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'};">
+                            ${a.status === 'Present' ? '<i class="fas fa-check" style="margin-right: 5px;"></i>' : '<i class="fas fa-times" style="margin-right: 5px;"></i>'} ${a.status.toUpperCase()}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; width: auto; height: auto;" onclick="markAttendance(${a.member_id}, 'Present')">Present</button>
+                        <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; width: auto; height: auto; margin-left: 0.5rem;" onclick="markAttendance(${a.member_id}, 'Absent')">Absent</button>
+                    </td>
+                </tr>
+            `).join('');
+        };
+
+        const markAttendance = async (member_id, status) => {
+            try {
+                const dateFilter = document.getElementById('filter-date').value;
+                await fetchAPI('/attendance', {
+                    method: 'POST',
+                    body: JSON.stringify({ member_id, date: dateFilter, status })
+                });
+                showNotification(`Attendance marked as ${status}`);
+                loadAttendance();
+            } catch (error) {
+                console.error(error);
+                alert('Failed to mark attendance');
+            }
+        };
+
+        const clearFilters = () => {
+            document.getElementById('filter-member').value = '';
+            renderTable();
+        };
+
+        loadAttendance();
+    </script>
+</body>
+</html>
