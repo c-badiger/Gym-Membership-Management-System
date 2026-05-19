@@ -34,7 +34,7 @@ const getAllAttendance = async (req, res) => {
     try {
         const { date, member_name } = req.query;
         let query = `
-            SELECT a.id, a.date, a.status, m.name, m.mobile_number 
+            SELECT a.id, a.date, a.status, m.name, m.phone AS mobile_number 
             FROM Attendance a
             JOIN Members m ON a.member_id = m.id
         `;

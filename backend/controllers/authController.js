@@ -101,9 +101,10 @@ const memberLogin = async (req, res) => {
 
 // Send OTP
 const sendOtp = async (req, res) => {
-    const { phone, type } = req.body;
+    const phone = req.body.phone || req.body.mobile_number;
+    const { type } = req.body;
 
-    if (!validateMobile(phone)) {
+    if (!phone || !validateMobile(phone)) {
         return res.status(400).json({ message: 'Phone must be exactly 10 digits' });
     }
 
@@ -134,9 +135,10 @@ const sendOtp = async (req, res) => {
 
 // Verify OTP (For Login)
 const verifyOtp = async (req, res) => {
-    const { phone, otp } = req.body;
+    const phone = req.body.phone || req.body.mobile_number;
+    const { otp } = req.body;
 
-    if (!validateMobile(phone)) {
+    if (!phone || !validateMobile(phone)) {
         return res.status(400).json({ message: 'Phone must be exactly 10 digits' });
     }
 
@@ -170,9 +172,10 @@ const verifyOtp = async (req, res) => {
 
 // Reset Password (Using OTP)
 const resetPassword = async (req, res) => {
-    const { phone, otp, newPassword } = req.body;
+    const phone = req.body.phone || req.body.mobile_number;
+    const { otp, newPassword } = req.body;
 
-    if (!validateMobile(phone)) {
+    if (!phone || !validateMobile(phone)) {
         return res.status(400).json({ message: 'Phone must be exactly 10 digits' });
     }
 
@@ -196,7 +199,8 @@ const resetPassword = async (req, res) => {
 
 // Member Register with OTP
 const memberRegister = async (req, res) => {
-    const { name, email, phone, password, otp } = req.body;
+    const phone = req.body.phone || req.body.mobile_number;
+    const { name, email, password, otp } = req.body;
 
     if (!phone || !validateMobile(phone)) {
         return res.status(400).json({ message: 'Phone must be exactly 10 digits' });
