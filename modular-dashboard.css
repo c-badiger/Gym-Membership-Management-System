@@ -6,7 +6,8 @@
   --success: #22c55e;
   --danger: #ef4444;
   --warning: #f59e0b;
-  --bg-color: #f3f4f6; /* Light gray background */
+  --bg-color: #f3f4f6;
+  /* Light gray background */
   --card-bg: #ffffff;
   --text-main: #111827;
   --text-muted: #6b7280;
@@ -206,11 +207,25 @@ body {
 }
 
 /* Grid Column Spans */
-.col-span-3 { grid-column: span 3; }
-.col-span-4 { grid-column: span 4; }
-.col-span-6 { grid-column: span 6; }
-.col-span-8 { grid-column: span 8; }
-.col-span-12 { grid-column: span 12; }
+.col-span-3 {
+  grid-column: span 3;
+}
+
+.col-span-4 {
+  grid-column: span 4;
+}
+
+.col-span-6 {
+  grid-column: span 6;
+}
+
+.col-span-8 {
+  grid-column: span 8;
+}
+
+.col-span-12 {
+  grid-column: span 12;
+}
 
 /* Small Cards Specifics */
 .stat-value {
@@ -229,8 +244,13 @@ body {
   gap: 4px;
 }
 
-.trend-up { color: var(--success); }
-.trend-down { color: var(--danger); }
+.trend-up {
+  color: var(--success);
+}
+
+.trend-down {
+  color: var(--danger);
+}
 
 /* Tables */
 .table-wrapper {
@@ -300,11 +320,30 @@ body {
   font-weight: 600;
 }
 
-.badge-success { background-color: #dcfce7; color: #166534; }
-.badge-danger { background-color: #fee2e2; color: #991b1b; }
-.badge-warning { background-color: #fef3c7; color: #92400e; }
-.badge-primary { background-color: #dbeafe; color: #1e40af; }
-.badge-neutral { background-color: #f3f4f6; color: #4b5563; }
+.badge-success {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.badge-danger {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.badge-warning {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.badge-primary {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-neutral {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
 
 /* Buttons */
 .btn {
@@ -351,8 +390,15 @@ body {
   color: var(--text-main);
 }
 
-.btn-icon.edit:hover { color: var(--primary); background-color: #eff6ff; }
-.btn-icon.delete:hover { color: var(--danger); background-color: #fef2f2; }
+.btn-icon.edit:hover {
+  color: var(--primary);
+  background-color: #eff6ff;
+}
+
+.btn-icon.delete:hover {
+  color: var(--danger);
+  background-color: #fef2f2;
+}
 
 /* Form Module */
 .form-group {
@@ -447,10 +493,24 @@ body {
 
 /* Responsive Grid Adjustments */
 @media (max-width: 1200px) {
-  .col-span-3 { grid-column: span 6; } /* Small cards take 6 cols */
-  .col-span-4 { grid-column: span 6; } /* Form takes 6 cols */
-  .col-span-8 { grid-column: span 12; } /* Members table takes full width */
-  .plans-internal-grid { grid-template-columns: repeat(2, 1fr); }
+  .col-span-3 {
+    grid-column: span 6;
+  }
+
+  /* Small cards take 6 cols */
+  .col-span-4 {
+    grid-column: span 6;
+  }
+
+  /* Form takes 6 cols */
+  .col-span-8 {
+    grid-column: span 12;
+  }
+
+  /* Members table takes full width */
+  .plans-internal-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
@@ -459,15 +519,19 @@ body {
     flex-direction: column;
     padding: 16px;
   }
-  
-  .col-span-3, .col-span-4, .col-span-6, .col-span-8, .col-span-12 {
+
+  .col-span-3,
+  .col-span-4,
+  .col-span-6,
+  .col-span-8,
+  .col-span-12 {
     grid-column: span 12;
   }
-  
+
   .nav-tabs {
     display: none;
   }
-  
+
   .plans-internal-grid {
     grid-template-columns: 1fr;
   }
